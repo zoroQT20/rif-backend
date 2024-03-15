@@ -15,15 +15,15 @@ public class BackendApplication extends SpringBootServletInitializer {
     }
 
     @Bean
-    public WebMvcConfigurer corsConfigurer() {
-        return new WebMvcConfigurer() {
-            @Override
-            public void addCorsMappings(CorsRegistry registry) {
-                registry.addMapping("/api/**") // Apply CORS to all endpoints under /api
-                        .allowedOrigins("http://localhost:5173") // Allow requests from this origin
-                        .allowedMethods("GET", "POST", "PUT", "DELETE") // Allow specified HTTP methods
-                        .allowCredentials(true); // Allow sending cookies
-            }
-        };
-    }
+        public WebMvcConfigurer corsConfigurer() {
+            return new WebMvcConfigurer() {
+                @Override
+                public void addCorsMappings(CorsRegistry registry) {
+                    registry.addMapping("/api/**") // Apply CORS to all endpoints under /api
+                            .allowedOrigins("http://localhost:5173", "http://localhost:8080") // Allow requests from these origins
+                            .allowedMethods("GET", "POST", "PUT", "DELETE") // Allow specified HTTP methods
+                            .allowCredentials(true); // Allow sending cookies
+                }
+            };
+        }
 }

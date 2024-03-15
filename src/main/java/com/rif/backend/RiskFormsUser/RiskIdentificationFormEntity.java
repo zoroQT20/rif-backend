@@ -57,7 +57,7 @@ public class RiskIdentificationFormEntity {
     private String opportunities;
 
     @NotBlank(message = "Action plans are required")
-    @Column(name = "action_plans")
+    @Column(name = "action_plans", nullable = false)
     private String actionPlan;
 
     @NotNull(message = "Submission date is required")
