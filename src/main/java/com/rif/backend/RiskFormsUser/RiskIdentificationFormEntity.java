@@ -1,9 +1,10 @@
 package com.rif.backend.RiskFormsUser;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.sql.Date;
+import javax.validation.constraints.Size;
+import javax.persistence.*;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "riskform")
@@ -14,59 +15,62 @@ public class RiskIdentificationFormEntity {
     @Column(name = "id") 
     private Long id;
 
-    @NotNull
+    @NotBlank(message = "SDA number is required")
     @Column(name = "SDA_number")
-    private Integer sdaNumber;
+    private String sdaNumber;
 
-    @NotEmpty
+    @NotBlank(message = "Issue particulars are required")
+    @Size(max = 255, message = "Issue particulars must be less than or equal to 255 characters")
     @Column(name = "issue_particulars")
     private String issueParticulars;
 
-    @NotEmpty
+    @NotBlank(message = "Issue type is required")
     @Column(name = "issue_type")
     private String issueType;
 
-    @NotEmpty
+    @NotBlank(message = "Risk particulars are required")
     @Column(name = "risk_particulars")
     private String riskParticulars;
 
-    @NotNull
+    @NotNull(message = "Risk SEV is required")
     @Column(name = "SEV")
-    private Integer sev;
+    private int riskSEV;
 
-    @NotNull
+    @NotNull(message = "Risk PROB is required")
     @Column(name = "PROB")
-    private Integer prob;
+    private int riskPROB;
 
-    @NotNull
+    @NotBlank(message = "Risk rating is required")
     @Column(name = "risk_rating")
-    private Integer riskRating;
+    private String riskRating;
 
-    @NotEmpty
+    @NotBlank(message = "Risk categorization level is required")
     @Column(name = "risk_categorization_level")
-    private String riskCategorizationLevel;
+    private String riskLevel;
 
-    @NotEmpty
+    @NotBlank(message = "Risk categorization type is required")
     @Column(name = "risk_categorization_type")
-    private String riskCategorizationType;
+    private String riskType;
 
+    @NotBlank(message = "Opportunities are required")
     @Column(name = "opportunities")
     private String opportunities;
 
+    @NotBlank(message = "Action plans are required")
     @Column(name = "action_plans")
-    private String actionPlans;
+    private String actionPlan;
 
-    @NotEmpty
-    @Column(name = "person_responsible")
-    private String personResponsible;
-
-    @NotEmpty
-    @Column(name = "action_type")
-    private String actionType;
-
-    @NotNull
+    @NotNull(message = "Submission date is required")
     @Column(name = "submission_date")
-    private Date submissionDate;
+    private LocalDate date;
+
+    @NotBlank(message = "Person responsible is required")
+    @Column(name = "person_responsible")
+    private String responsiblePerson;
+
+    @NotBlank(message = "Action type is required")
+    @Column(name = "action_type")
+    private String actionRad;
 
     // Constructors, Getters, and Setters
     // Constructors
@@ -82,11 +86,11 @@ public class RiskIdentificationFormEntity {
         this.id = id;
     }
 
-    public Integer getSdaNumber() {
+    public String getSdaNumber() {
         return sdaNumber;
     }
 
-    public void setSdaNumber(Integer sdaNumber) {
+    public void setSdaNumber(String sdaNumber) {
         this.sdaNumber = sdaNumber;
     }
 
@@ -114,44 +118,44 @@ public class RiskIdentificationFormEntity {
         this.riskParticulars = riskParticulars;
     }
 
-    public Integer getSev() {
-        return sev;
+    public int getRiskSEV() {
+        return riskSEV;
     }
 
-    public void setSev(Integer sev) {
-        this.sev = sev;
+    public void setRiskSEV(int riskSEV) {
+        this.riskSEV = riskSEV;
     }
 
-    public Integer getProb() {
-        return prob;
+    public int getRiskPROB() {
+        return riskPROB;
     }
 
-    public void setProb(Integer prob) {
-        this.prob = prob;
+    public void setRiskPROB(int riskPROB) {
+        this.riskPROB = riskPROB;
     }
 
-    public Integer getRiskRating() {
+    public String getRiskRating() {
         return riskRating;
     }
 
-    public void setRiskRating(Integer riskRating) {
+    public void setRiskRating(String riskRating) {
         this.riskRating = riskRating;
     }
 
-    public String getRiskCategorizationLevel() {
-        return riskCategorizationLevel;
+    public String getRiskLevel() {
+        return riskLevel;
     }
 
-    public void setRiskCategorizationLevel(String riskCategorizationLevel) {
-        this.riskCategorizationLevel = riskCategorizationLevel;
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
     }
 
-    public String getRiskCategorizationType() {
-        return riskCategorizationType;
+    public String getRiskType() {
+        return riskType;
     }
 
-    public void setRiskCategorizationType(String riskCategorizationType) {
-        this.riskCategorizationType = riskCategorizationType;
+    public void setRiskType(String riskType) {
+        this.riskType = riskType;
     }
 
     public String getOpportunities() {
@@ -162,35 +166,35 @@ public class RiskIdentificationFormEntity {
         this.opportunities = opportunities;
     }
 
-    public String getActionPlans() {
-        return actionPlans;
+    public String getActionPlan() {
+        return actionPlan;
     }
 
-    public void setActionPlans(String actionPlans) {
-        this.actionPlans = actionPlans;
+    public void setActionPlan(String actionPlan) {
+        this.actionPlan = actionPlan;
     }
 
-    public String getPersonResponsible() {
-        return personResponsible;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setPersonResponsible(String personResponsible) {
-        this.personResponsible = personResponsible;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
-    public String getActionType() {
-        return actionType;
+    public String getResponsiblePerson() {
+        return responsiblePerson;
     }
 
-    public void setActionType(String actionType) {
-        this.actionType = actionType;
+    public void setResponsiblePerson(String responsiblePerson) {
+        this.responsiblePerson = responsiblePerson;
     }
 
-    public Date getSubmissionDate() {
-        return submissionDate;
+    public String getActionRad() {
+        return actionRad;
     }
 
-    public void setSubmissionDate(Date submissionDate) {
-        this.submissionDate = submissionDate;
+    public void setActionRad(String actionRad) {
+        this.actionRad = actionRad;
     }
 }
