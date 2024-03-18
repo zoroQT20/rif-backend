@@ -1,80 +1,55 @@
 package com.rif.backend.RiskFormsUser;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import javax.persistence.*;
-import java.time.LocalDate;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
-@Table(name = "riskform")
-public class RiskIdentificationFormEntity {
+@Table(name = "risk_forms")
+public class RiskFormData {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id") 
     private Long id;
 
-    @NotBlank(message = "SDA number is required")
-    @Column(name = "SDA_number")
-    private String sdaNumber;
-
-    @NotBlank(message = "Issue particulars are required")
-    @Size(max = 255, message = "Issue particulars must be less than or equal to 255 characters")
-    @Column(name = "issue_particulars")
+    private Integer sdaNumber;
+    private String uploadRIF;
     private String issueParticulars;
-
-    @NotBlank(message = "Issue type is required")
-    @Column(name = "issue_type")
     private String issueType;
-
-    @NotBlank(message = "Risk particulars are required")
-    @Column(name = "risk_particulars")
     private String riskParticulars;
-
-    @NotNull(message = "Risk SEV is required")
-    @Column(name = "SEV")
     private int riskSEV;
-
-    @NotNull(message = "Risk PROB is required")
-    @Column(name = "PROB")
     private int riskPROB;
-
-    @NotBlank(message = "Risk rating is required")
-    @Column(name = "risk_rating")
+    private String riskLevel;
+    private String riskType;
+    private String opportunities;
+    private String actionPlan;
+    private String date;
+    private String responsiblePerson;
+    private String actionRad;
     private String riskRating;
 
-    @NotBlank(message = "Risk categorization level is required")
-    @Column(name = "risk_categorization_level")
-    private String riskLevel;
-
-    @NotBlank(message = "Risk categorization type is required")
-    @Column(name = "risk_categorization_type")
-    private String riskType;
-
-    @NotBlank(message = "Opportunities are required")
-    @Column(name = "opportunities")
-    private String opportunities;
-
-    @NotBlank(message = "Action plans are required")
-    @Column(name = "action_plans", nullable = false)
-    private String actionPlan;
-
-    @NotNull(message = "Submission date is required")
-    @Column(name = "submission_date")
-    private LocalDate date;
-
-    @NotBlank(message = "Person responsible is required")
-    @Column(name = "person_responsible")
-    private String responsiblePerson;
-
-    @NotBlank(message = "Action type is required")
-    @Column(name = "action_type")
-    private String actionRad;
-
-    // Constructors, Getters, and Setters
     // Constructors
-    public RiskIdentificationFormEntity() {
+    public RiskFormData() {
+    }
+
+    public RiskFormData(Integer sdaNumber, String uploadRIF, String issueParticulars, String issueType, String riskParticulars, int riskSEV, int riskPROB, String riskLevel, String riskType, String opportunities, String actionPlan, String date, String responsiblePerson, String actionRad, String riskRating) {
+        this.sdaNumber = sdaNumber;
+        this.uploadRIF = uploadRIF;
+        this.issueParticulars = issueParticulars;
+        this.issueType = issueType;
+        this.riskParticulars = riskParticulars;
+        this.riskSEV = riskSEV;
+        this.riskPROB = riskPROB;
+        this.riskLevel = riskLevel;
+        this.riskType = riskType;
+        this.opportunities = opportunities;
+        this.actionPlan = actionPlan;
+        this.date = date;
+        this.responsiblePerson = responsiblePerson;
+        this.actionRad = actionRad;
+        this.riskRating = riskRating;
     }
 
     // Getters and setters
@@ -86,12 +61,20 @@ public class RiskIdentificationFormEntity {
         this.id = id;
     }
 
-    public String getSdaNumber() {
+    public Integer getSdaNumber() {
         return sdaNumber;
     }
 
-    public void setSdaNumber(String sdaNumber) {
+    public void setSdaNumber(Integer sdaNumber) {
         this.sdaNumber = sdaNumber;
+    }
+
+    public String getUploadRIF() {
+        return uploadRIF;
+    }
+
+    public void setUploadRIF(String uploadRIF) {
+        this.uploadRIF = uploadRIF;
     }
 
     public String getIssueParticulars() {
@@ -134,14 +117,6 @@ public class RiskIdentificationFormEntity {
         this.riskPROB = riskPROB;
     }
 
-    public String getRiskRating() {
-        return riskRating;
-    }
-
-    public void setRiskRating(String riskRating) {
-        this.riskRating = riskRating;
-    }
-
     public String getRiskLevel() {
         return riskLevel;
     }
@@ -174,11 +149,11 @@ public class RiskIdentificationFormEntity {
         this.actionPlan = actionPlan;
     }
 
-    public LocalDate getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -196,5 +171,13 @@ public class RiskIdentificationFormEntity {
 
     public void setActionRad(String actionRad) {
         this.actionRad = actionRad;
+    }
+
+    public String getRiskRating() {
+        return riskRating;
+    }
+
+    public void setRiskRating(String riskRating) {
+        this.riskRating = riskRating;
     }
 }
