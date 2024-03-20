@@ -19,8 +19,8 @@ public class RiskFormData {
     private String issueParticulars;
     private String issueType;
     private String riskParticulars;
-    private int riskSEV;
-    private int riskPROB;
+    private Integer riskSEV;
+    private Integer riskPROB;
     private String riskLevel;
     private String riskType;
     private String opportunities;
@@ -28,13 +28,13 @@ public class RiskFormData {
     private String date;
     private String responsiblePerson;
     private String actionRad;
-    private String riskRating;
+    private Integer riskRating;
 
     // Constructors
     public RiskFormData() {
     }
 
-    public RiskFormData(Integer sdaNumber, String uploadRIF, String issueParticulars, String issueType, String riskParticulars, int riskSEV, int riskPROB, String riskLevel, String riskType, String opportunities, String actionPlan, String date, String responsiblePerson, String actionRad, String riskRating) {
+    public RiskFormData(Integer sdaNumber, String uploadRIF, String issueParticulars, String issueType, String riskParticulars, Integer riskSEV, Integer riskPROB, String riskLevel, String riskType, String opportunities, String actionPlan, String date, String responsiblePerson, String actionRad, Integer riskRating) {
         this.sdaNumber = sdaNumber;
         this.uploadRIF = uploadRIF;
         this.issueParticulars = issueParticulars;
@@ -101,19 +101,19 @@ public class RiskFormData {
         this.riskParticulars = riskParticulars;
     }
 
-    public int getRiskSEV() {
+    public Integer getRiskSEV() {
         return riskSEV;
     }
 
-    public void setRiskSEV(int riskSEV) {
+    public void setRiskSEV(Integer riskSEV) {
         this.riskSEV = riskSEV;
     }
 
-    public int getRiskPROB() {
+    public Integer getRiskPROB() {
         return riskPROB;
     }
 
-    public void setRiskPROB(int riskPROB) {
+    public void setRiskPROB(Integer riskPROB) {
         this.riskPROB = riskPROB;
     }
 
@@ -173,11 +173,11 @@ public class RiskFormData {
         this.actionRad = actionRad;
     }
 
-    public String getRiskRating() {
-        return riskRating;
-    }
+public Integer getRiskRating() {
+    return riskRating;
+}
 
-    public void setRiskRating(String riskRating) {
-        this.riskRating = riskRating;
-    }
+public void setRiskRating(Integer riskRating) {
+    this.riskRating = riskRating;
+}
 }
