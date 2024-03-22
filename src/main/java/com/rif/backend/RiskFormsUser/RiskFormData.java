@@ -1,9 +1,12 @@
 package com.rif.backend.RiskFormsUser;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -15,6 +18,7 @@ public class RiskFormData {
     private Long id;
 
     private Integer sdaNumber;
+    // Assuming uploadRIF field is managed differently as it involves file handling
     private String uploadRIF;
     private String issueParticulars;
     private String issueType;
@@ -30,29 +34,15 @@ public class RiskFormData {
     private String actionRad;
     private Integer riskRating;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "report_id")
+    private Report report;
+
     // Constructors
     public RiskFormData() {
     }
 
-    public RiskFormData(Integer sdaNumber, String uploadRIF, String issueParticulars, String issueType, String riskParticulars, Integer riskSEV, Integer riskPROB, String riskLevel, String riskType, String opportunities, String actionPlan, String date, String responsiblePerson, String actionRad, Integer riskRating) {
-        this.sdaNumber = sdaNumber;
-        this.uploadRIF = uploadRIF;
-        this.issueParticulars = issueParticulars;
-        this.issueType = issueType;
-        this.riskParticulars = riskParticulars;
-        this.riskSEV = riskSEV;
-        this.riskPROB = riskPROB;
-        this.riskLevel = riskLevel;
-        this.riskType = riskType;
-        this.opportunities = opportunities;
-        this.actionPlan = actionPlan;
-        this.date = date;
-        this.responsiblePerson = responsiblePerson;
-        this.actionRad = actionRad;
-        this.riskRating = riskRating;
-    }
-
-    // Getters and setters
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -173,11 +163,19 @@ public class RiskFormData {
         this.actionRad = actionRad;
     }
 
-public Integer getRiskRating() {
-    return riskRating;
-}
+    public Integer getRiskRating() {
+        return riskRating;
+    }
 
-public void setRiskRating(Integer riskRating) {
-    this.riskRating = riskRating;
-}
+    public void setRiskRating(Integer riskRating) {
+        this.riskRating = riskRating;
+    }
+
+    public Report getReport() {
+        return report;
+    }
+
+    public void setReport(Report report) {
+        this.report = report;
+    }
 }
