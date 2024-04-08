@@ -1,13 +1,8 @@
 package com.rif.backend.RiskFormsUser;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "risk_forms")
@@ -18,7 +13,6 @@ public class RiskFormData {
     private Long id;
 
     private Integer sdaNumber;
-    // Assuming uploadRIF field is managed differently as it involves file handling
     private String uploadRIF;
     private String issueParticulars;
     private String issueType;
@@ -27,8 +21,6 @@ public class RiskFormData {
     private Integer riskPROB;
     private String riskLevel;
     private String riskType;
-    private String opportunities;
-    private String actionPlan;
     private String date;
     private String responsiblePerson;
     private String actionRad;
@@ -37,6 +29,12 @@ public class RiskFormData {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")
     private Report report;
+
+    @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Opportunity> opportunities = new ArrayList<>();
+
+    @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ActionPlan> actionPlans = new ArrayList<>();
 
     // Constructors
     public RiskFormData() {
@@ -123,20 +121,41 @@ public class RiskFormData {
         this.riskType = riskType;
     }
 
-    public String getOpportunities() {
+  public List<Opportunity> getOpportunities() {
         return opportunities;
     }
 
-    public void setOpportunities(String opportunities) {
+    public void setOpportunities(List<Opportunity> opportunities) {
         this.opportunities = opportunities;
     }
 
-    public String getActionPlan() {
-        return actionPlan;
+    public List<ActionPlan> getActionPlans() {
+        return actionPlans;
     }
 
-    public void setActionPlan(String actionPlan) {
-        this.actionPlan = actionPlan;
+    public void setActionPlans(List<ActionPlan> actionPlans) {
+        this.actionPlans = actionPlans;
+    }
+
+    // Helper methods to add and remove opportunities and action plans if needed
+    public void addOpportunity(Opportunity opportunity) {
+        opportunities.add(opportunity);
+        opportunity.setRiskFormData(this);
+    }
+
+    public void removeOpportunity(Opportunity opportunity) {
+        opportunities.remove(opportunity);
+        opportunity.setRiskFormData(null);
+    }
+
+    public void addActionPlan(ActionPlan actionPlan) {
+        actionPlans.add(actionPlan);
+        actionPlan.setRiskFormData(this);
+    }
+
+    public void removeActionPlan(ActionPlan actionPlan) {
+        actionPlans.remove(actionPlan);
+        actionPlan.setRiskFormData(null);
     }
 
     public String getDate() {
