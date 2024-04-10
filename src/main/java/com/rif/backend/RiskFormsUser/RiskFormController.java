@@ -24,4 +24,11 @@ public class RiskFormController {
             return ResponseEntity.badRequest().body("Failed to submit the form: " + e.getMessage());
         }
     }
+
+    @GetMapping
+    public ResponseEntity<List<RiskFormData>> getAllRiskForms() {
+        List<RiskFormData> forms = riskFormService.findAll();
+        return ResponseEntity.ok(forms);
+    }
+
 }
