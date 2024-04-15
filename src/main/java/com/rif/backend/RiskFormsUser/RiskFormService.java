@@ -40,9 +40,4 @@ public class RiskFormService {
             riskFormRepository.save(formData); // Save each RiskFormData along with its opportunities and action plans.
         }
     }
-
-    public List<RiskFormData> findAll() {
-        return riskFormRepository.findAll();
-    }
-    
 }
