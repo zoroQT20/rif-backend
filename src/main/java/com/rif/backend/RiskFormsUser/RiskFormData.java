@@ -1,11 +1,15 @@
 package com.rif.backend.RiskFormsUser;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "risk_forms")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class RiskFormData {
 
     @Id
@@ -30,15 +34,13 @@ public class RiskFormData {
     @JoinColumn(name = "report_id")
     private Report report;
 
-    @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Opportunity> opportunities = new ArrayList<>();
+    @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Set<Opportunity> opportunities = new HashSet<>();
 
-    @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ActionPlan> actionPlans = new ArrayList<>();
-
-    // Constructors
-    public RiskFormData() {
-    }
+    @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Set<ActionPlan> actionPlans = new HashSet<>();
 
     // Getters and Setters
     public Long getId() {
@@ -121,43 +123,6 @@ public class RiskFormData {
         this.riskType = riskType;
     }
 
-  public List<Opportunity> getOpportunities() {
-        return opportunities;
-    }
-
-    public void setOpportunities(List<Opportunity> opportunities) {
-        this.opportunities = opportunities;
-    }
-
-    public List<ActionPlan> getActionPlans() {
-        return actionPlans;
-    }
-
-    public void setActionPlans(List<ActionPlan> actionPlans) {
-        this.actionPlans = actionPlans;
-    }
-
-    // Helper methods to add and remove opportunities and action plans if needed
-    public void addOpportunity(Opportunity opportunity) {
-        opportunities.add(opportunity);
-        opportunity.setRiskFormData(this);
-    }
-
-    public void removeOpportunity(Opportunity opportunity) {
-        opportunities.remove(opportunity);
-        opportunity.setRiskFormData(null);
-    }
-
-    public void addActionPlan(ActionPlan actionPlan) {
-        actionPlans.add(actionPlan);
-        actionPlan.setRiskFormData(this);
-    }
-
-    public void removeActionPlan(ActionPlan actionPlan) {
-        actionPlans.remove(actionPlan);
-        actionPlan.setRiskFormData(null);
-    }
-
     public String getDate() {
         return date;
     }
@@ -196,5 +161,21 @@ public class RiskFormData {
 
     public void setReport(Report report) {
         this.report = report;
+    }
+
+    public Set<Opportunity> getOpportunities() {
+        return opportunities;
+    }
+
+    public void setOpportunities(Set<Opportunity> opportunities) {
+        this.opportunities = opportunities;
+    }
+
+    public Set<ActionPlan> getActionPlans() {
+        return actionPlans;
+    }
+
+    public void setActionPlans(Set<ActionPlan> actionPlans) {
+        this.actionPlans = actionPlans;
     }
 }
