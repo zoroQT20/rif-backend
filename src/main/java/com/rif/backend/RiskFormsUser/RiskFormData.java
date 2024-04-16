@@ -30,6 +30,9 @@ public class RiskFormData {
     private String status;
     private Integer riskRating;
 
+    @Column(name = "submission_date")
+private String submissionDate;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")
@@ -179,5 +182,12 @@ public class RiskFormData {
     public void setActionPlans(Set<ActionPlan> actionPlans) {
         this.actionPlans = actionPlans;
     }
+    public String getSubmissionDate() {
+    return submissionDate;
+}
+
+public void setSubmissionDate(String submissionDate) {
+    this.submissionDate = submissionDate;
+}
 
 }
