@@ -27,8 +27,9 @@ public class RiskFormData {
     private String riskType;
     private String date;
     private String responsiblePerson;
-    private String actionRad;
+    private String status;
     private Integer riskRating;
+
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")
@@ -139,12 +140,12 @@ public class RiskFormData {
         this.responsiblePerson = responsiblePerson;
     }
 
-    public String getActionRad() {
-        return actionRad;
+    public String getStatus() {
+        return status;
     }
 
-    public void setActionRad(String actionRad) {
-        this.actionRad = actionRad;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public Integer getRiskRating() {
@@ -178,4 +179,5 @@ public class RiskFormData {
     public void setActionPlans(Set<ActionPlan> actionPlans) {
         this.actionPlans = actionPlans;
     }
+
 }
