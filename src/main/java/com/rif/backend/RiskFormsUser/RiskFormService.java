@@ -14,30 +14,31 @@ public class RiskFormService {
     @Autowired
     private ReportRepository reportRepository;
 
+    @Autowired
+    private ResponsiblePersonRepository responsiblePersonRepository;
+
     @Transactional
     public void saveRiskFormDataList(List<RiskFormData> formDataList) {
-        Report report = new Report();
-        reportRepository.save(report); // Save the report to generate an ID.
+        if (!formDataList.isEmpty()) {
+            // Create only one Report for all formData in the list
+            Report report = new Report();
+            reportRepository.save(report);
 
-        for (RiskFormData formData : formDataList) {
-            // Associate each RiskFormData with the report.
-            formData.setReport(report);
+            for (RiskFormData formData : formDataList) {
+                formData.setReport(report);  // Set the same report for each formData
 
-            // Process opportunities
-            if (formData.getOpportunities() != null) {
-                for (Opportunity opportunity : formData.getOpportunities()) {
-                    opportunity.setRiskFormData(formData); // Associate with RiskFormData
-                }
+                // Handling opportunities and action plans
+                formData.getOpportunities().forEach(opportunity -> opportunity.setRiskFormData(formData));
+                formData.getActionPlans().forEach(actionPlan -> actionPlan.setRiskFormData(formData));
+
+                // Convert responsiblePerson names to entities
+                formData.convertNamesToResponsiblePersons();
+
+                // Save the formData with associated entities
+                riskFormRepository.save(formData);
             }
-
-            // Process action plans
-            if (formData.getActionPlans() != null) {
-                for (ActionPlan actionPlan : formData.getActionPlans()) {
-                    actionPlan.setRiskFormData(formData); // Associate with RiskFormData
-                }
-            }
-
-            riskFormRepository.save(formData); // Save each RiskFormData along with its opportunities and action plans.
         }
     }
+
+    // You may add additional methods to handle other business logic like updating or deleting RiskFormData
 }

@@ -1,11 +1,13 @@
 package com.rif.backend.RiskFormsUser;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "risk_forms")
@@ -26,13 +28,9 @@ public class RiskFormData {
     private String riskLevel;
     private String riskType;
     private String date;
-    private String responsiblePerson;
-    private String status;
     private Integer riskRating;
-
-    @Column(name = "submission_date")
-private String submissionDate;
-
+    private String status;
+    private String submissionDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")
@@ -46,7 +44,15 @@ private String submissionDate;
     @JsonManagedReference
     private Set<ActionPlan> actionPlans = new HashSet<>();
 
+    @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Set<ResponsiblePerson> responsiblePersons = new HashSet<>();
+
+    @Transient  // Not stored in the DB, just used to handle incoming data
+    private Set<String> responsiblePersonNames = new HashSet<>();
+
     // Getters and Setters
+
     public Long getId() {
         return id;
     }
@@ -135,12 +141,12 @@ private String submissionDate;
         this.date = date;
     }
 
-    public String getResponsiblePerson() {
-        return responsiblePerson;
+    public Integer getRiskRating() {
+        return riskRating;
     }
 
-    public void setResponsiblePerson(String responsiblePerson) {
-        this.responsiblePerson = responsiblePerson;
+    public void setRiskRating(Integer riskRating) {
+        this.riskRating = riskRating;
     }
 
     public String getStatus() {
@@ -151,12 +157,12 @@ private String submissionDate;
         this.status = status;
     }
 
-    public Integer getRiskRating() {
-        return riskRating;
+    public String getSubmissionDate() {
+        return submissionDate;
     }
 
-    public void setRiskRating(Integer riskRating) {
-        this.riskRating = riskRating;
+    public void setSubmissionDate(String submissionDate) {
+        this.submissionDate = submissionDate;
     }
 
     public Report getReport() {
@@ -182,12 +188,27 @@ private String submissionDate;
     public void setActionPlans(Set<ActionPlan> actionPlans) {
         this.actionPlans = actionPlans;
     }
-    public String getSubmissionDate() {
-    return submissionDate;
-}
 
-public void setSubmissionDate(String submissionDate) {
-    this.submissionDate = submissionDate;
-}
+    public Set<ResponsiblePerson> getResponsiblePersons() {
+        return responsiblePersons;
+    }
 
+    public void setResponsiblePersons(Set<ResponsiblePerson> responsiblePersons) {
+        this.responsiblePersons = responsiblePersons;
+    }
+
+    public Set<String> getResponsiblePersonNames() {
+        return responsiblePersonNames;
+    }
+
+    public void setResponsiblePersonNames(Set<String> responsiblePersonNames) {
+        this.responsiblePersonNames = responsiblePersonNames;
+    }
+
+    // Helper method to convert names to ResponsiblePerson entities
+    public void convertNamesToResponsiblePersons() {
+        this.responsiblePersons = this.responsiblePersonNames.stream()
+            .map(name -> new ResponsiblePerson(name, this))
+            .collect(Collectors.toSet());
+    }
 }

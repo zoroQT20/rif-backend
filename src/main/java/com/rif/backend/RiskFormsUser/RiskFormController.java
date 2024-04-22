@@ -22,15 +22,15 @@ public class RiskFormController {
      * @param formDataList A list of RiskFormData.
      * @return ResponseEntity with success or error message.
      */
-    @PostMapping("/submit")
-    public ResponseEntity<?> submitRiskForm(@RequestBody List<RiskFormData> formDataList) {
-        try {
-            riskFormService.saveRiskFormDataList(formDataList);
-            return ResponseEntity.ok().body("Form submitted successfully!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to submit the form: " + e.getMessage());
-        }
+  @PostMapping("/submit")
+public ResponseEntity<?> submitRiskForm(@RequestBody List<RiskFormData> formDataList) {
+    try {
+        riskFormService.saveRiskFormDataList(formDataList);
+        return ResponseEntity.ok("Form submitted successfully!");
+    } catch (Exception e) {
+        return ResponseEntity.badRequest().body("Failed to submit the form: " + e.getMessage());
     }
+}
 
     /**
      * Endpoint to retrieve a report with its RiskFormDatas by report ID.
