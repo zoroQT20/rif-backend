@@ -30,6 +30,8 @@ public class RiskFormService {
                 // Handling opportunities and action plans
                 formData.getOpportunities().forEach(opportunity -> opportunity.setRiskFormData(formData));
                 formData.getActionPlans().forEach(actionPlan -> actionPlan.setRiskFormData(formData));
+                                formData.getRiskParticulars().forEach(riskParticular -> riskParticular.setRiskFormData(formData));
+
 
                 // Convert responsiblePerson names to entities
                 formData.convertNamesToResponsiblePersons();

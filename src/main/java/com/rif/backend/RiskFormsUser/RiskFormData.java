@@ -22,7 +22,6 @@ public class RiskFormData {
     private String uploadRIF;
     private String issueParticulars;
     private String issueType;
-    private String riskParticulars;
     private Integer riskSEV;
     private Integer riskPROB;
     private String riskLevel;
@@ -46,13 +45,16 @@ public class RiskFormData {
 
     @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JsonManagedReference
+    private Set<RiskParticular> riskParticulars = new HashSet<>();
+
+    @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private Set<ResponsiblePerson> responsiblePersons = new HashSet<>();
 
     @Transient  // Not stored in the DB, just used to handle incoming data
     private Set<String> responsiblePersonNames = new HashSet<>();
 
     // Getters and Setters
-
     public Long getId() {
         return id;
     }
@@ -91,14 +93,6 @@ public class RiskFormData {
 
     public void setIssueType(String issueType) {
         this.issueType = issueType;
-    }
-
-    public String getRiskParticulars() {
-        return riskParticulars;
-    }
-
-    public void setRiskParticulars(String riskParticulars) {
-        this.riskParticulars = riskParticulars;
     }
 
     public Integer getRiskSEV() {
@@ -187,6 +181,14 @@ public class RiskFormData {
 
     public void setActionPlans(Set<ActionPlan> actionPlans) {
         this.actionPlans = actionPlans;
+    }
+
+    public Set<RiskParticular> getRiskParticulars() {
+        return riskParticulars;
+    }
+
+    public void setRiskParticulars(Set<RiskParticular> riskParticulars) {
+        this.riskParticulars = riskParticulars;
     }
 
     public Set<ResponsiblePerson> getResponsiblePersons() {
