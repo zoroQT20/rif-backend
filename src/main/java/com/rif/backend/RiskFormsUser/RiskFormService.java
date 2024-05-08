@@ -34,7 +34,7 @@ public class RiskFormService {
 
 
                 // Convert responsiblePerson names to entities
-                formData.convertNamesToResponsiblePersons();
+        formData.convertNamesToResponsiblePersons(); 
 
                 // Save the formData with associated entities
                 riskFormRepository.save(formData);

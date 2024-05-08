@@ -47,9 +47,9 @@ public class RiskFormData {
     @JsonManagedReference
     private Set<RiskParticular> riskParticulars = new HashSet<>();
 
-    @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonManagedReference
-    private Set<ResponsiblePerson> responsiblePersons = new HashSet<>();
+   @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+@JsonManagedReference
+private Set<ResponsiblePerson> responsiblePersons = new HashSet<>();
 
     @Transient  // Not stored in the DB, just used to handle incoming data
     private Set<String> responsiblePersonNames = new HashSet<>();
@@ -208,9 +208,9 @@ public class RiskFormData {
     }
 
     // Helper method to convert names to ResponsiblePerson entities
-    public void convertNamesToResponsiblePersons() {
-        this.responsiblePersons = this.responsiblePersonNames.stream()
-            .map(name -> new ResponsiblePerson(name, this))
-            .collect(Collectors.toSet());
-    }
+public void convertNamesToResponsiblePersons() {
+    this.responsiblePersons = this.responsiblePersonNames.stream()
+        .map(name -> new ResponsiblePerson(name, this))
+        .collect(Collectors.toSet());
+}
 }
