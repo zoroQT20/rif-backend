@@ -1,6 +1,7 @@
 package com.rif.backend.RiskFormsUser;
 
 import javax.persistence.*;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -47,11 +48,11 @@ public class RiskFormData {
     @JsonManagedReference
     private Set<RiskParticular> riskParticulars = new HashSet<>();
 
-   @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-@JsonManagedReference
-private Set<ResponsiblePerson> responsiblePersons = new HashSet<>();
+    @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
+    private Set<ResponsiblePerson> responsiblePersons = new HashSet<>();
 
-    @Transient  // Not stored in the DB, just used to handle incoming data
+    @Transient // Not stored in the DB, just used to handle incoming data
     private Set<String> responsiblePersonNames = new HashSet<>();
 
     // Getters and Setters
@@ -87,13 +88,21 @@ private Set<ResponsiblePerson> responsiblePersons = new HashSet<>();
         this.issueParticulars = issueParticulars;
     }
 
-    public String getIssueType() {
-        return issueType;
-    }
+public String getIssueType() {
+    return issueType;
+}
 
-    public void setIssueType(String issueType) {
-        this.issueType = issueType;
-    }
+public void setIssueType(String issueType) {
+    this.issueType = issueType;
+}
+
+public Set<String> getIssueTypes() {
+    return new HashSet<>(Arrays.asList(issueType.split(",")));
+}
+
+public void setIssueTypes(Set<String> issueTypes) {
+    this.issueType = String.join(",", issueTypes);
+}
 
     public Integer getRiskSEV() {
         return riskSEV;
@@ -207,10 +216,9 @@ private Set<ResponsiblePerson> responsiblePersons = new HashSet<>();
         this.responsiblePersonNames = responsiblePersonNames;
     }
 
-    // Helper method to convert names to ResponsiblePerson entities
-public void convertNamesToResponsiblePersons() {
-    this.responsiblePersons = this.responsiblePersonNames.stream()
-        .map(name -> new ResponsiblePerson(name, this))
-        .collect(Collectors.toSet());
-}
+    public void convertNamesToResponsiblePersons() {
+        this.responsiblePersons = this.responsiblePersonNames.stream()
+            .map(name -> new ResponsiblePerson(name, this))
+            .collect(Collectors.toSet());
+    }
 }
