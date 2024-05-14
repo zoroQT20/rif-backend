@@ -11,6 +11,11 @@ public class ESignatureService {
 
     @Transactional
     public ESignature saveESignature(ESignature eSignature) {
-        return repository.save(eSignature);
+        return repository.save(eSignature);  // This will save the ESignature object to the database
+    }
+
+    @Transactional(readOnly = true)
+    public ESignature findById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 }

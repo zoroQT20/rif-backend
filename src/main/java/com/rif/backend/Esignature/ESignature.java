@@ -16,6 +16,7 @@ public class ESignature {
     private String postNominalTitle;
 
     @Lob
+    @Column(name = "e_signature_photo")
     private byte[] eSignaturePhoto;
 
     // Default constructor
