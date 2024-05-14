@@ -21,6 +21,7 @@ public class RiskFormData {
 
     private Integer sdaNumber;
     private String uploadRIF;
+     @Column(length = 10000)
     private String issueParticulars;
     private String issueType;
     private Integer riskSEV;
@@ -29,6 +30,7 @@ public class RiskFormData {
     private String riskType;
     private String date;
     private Integer riskRating;
+@Column(length = 10000)
     private String status;
     private String submissionDate;
 

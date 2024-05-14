@@ -1,7 +1,7 @@
 package com.rif.backend.RiskFormsUser;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "action_plans")
@@ -10,6 +10,7 @@ public class ActionPlan {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(length = 10000) // Increase the length to accommodate larger text
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -17,8 +18,11 @@ public class ActionPlan {
     @JsonBackReference
     private RiskFormData riskFormData;
 
-    // Constructors, Getters, and Setters
+    // Default constructor
+    public ActionPlan() {
+    }
 
+    // Getters and setters
     public Long getId() {
         return id;
     }
