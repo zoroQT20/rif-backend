@@ -1,6 +1,5 @@
 package com.rif.backend.Auth;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,7 +17,6 @@ import com.rif.backend.Security.UserDetailsImpl;
 import com.rif.backend.Security.jwt.JwtUtils;
 
 import javax.validation.Valid;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -43,27 +41,26 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
-@PostMapping("/signin")
-public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
-    Authentication authentication = authenticationManager.authenticate(
-            new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+    @PostMapping("/signin")
+    public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-    String jwt = jwtUtils.generateJwtToken(authentication);
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String jwt = jwtUtils.generateJwtToken(authentication);
 
-    UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-    List<String> roles = userDetails.getAuthorities().stream()
-            .map(item -> item.getAuthority())
-            .collect(Collectors.toList());
+        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+        List<String> roles = userDetails.getAuthorities().stream()
+                .map(item -> item.getAuthority())
+                .collect(Collectors.toList());
 
-    return ResponseEntity.ok(new JwtResponse(jwt,
-                                             userDetails.getId(),
-                                             userDetails.getEmail(),
-                                             userDetails.getFirstname(),
-                                             userDetails.getLastname(),
-                                             roles));
-}
-
+        return ResponseEntity.ok(new JwtResponse(jwt,
+                                                 userDetails.getId(),
+                                                 userDetails.getEmail(),
+                                                 userDetails.getFirstname(),
+                                                 userDetails.getLastname(),
+                                                 roles));
+    }
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
@@ -93,19 +90,16 @@ public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest login
                         Role adminRole = roleRepository.findByName(ERole.ROLE_ADMIN)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(adminRole);
-
                         break;
                     case "approver":
                         Role approverRole = roleRepository.findByName(ERole.ROLE_APPROVER)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(approverRole);
-
                         break;
                     case "auditor":
                         Role auditorRole = roleRepository.findByName(ERole.ROLE_AUDITOR)
                                 .orElseThrow(() -> new RuntimeException("Error: Role is not found."));
                         roles.add(auditorRole);
-
                         break;
                     default:
                         Role userRole = roleRepository.findByName(ERole.ROLE_USER)
