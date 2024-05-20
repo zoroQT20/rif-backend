@@ -10,7 +10,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import com.rif.backend.Payload.JwtResponse;
-import com.rif.backend.Payload.LoginRequest;
 import com.rif.backend.Payload.MessageResponse;
 import com.rif.backend.Payload.SignupRequest;
 import com.rif.backend.Security.UserDetailsImpl;
@@ -22,7 +21,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@CrossOrigin(origins = "http://localhost:5173", maxAge = 3600)
+@CrossOrigin(origins = "${cors.urls}", maxAge = 3600)
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -41,8 +40,15 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    @Autowired
+    CaptchaService captchaService;
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
+        if (!captchaService.verifyCaptcha(loginRequest.getCaptchaValue())) {
+            return ResponseEntity.badRequest().body(new MessageResponse("CAPTCHA verification failed"));
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
