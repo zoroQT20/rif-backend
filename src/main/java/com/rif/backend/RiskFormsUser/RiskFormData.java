@@ -1,14 +1,14 @@
 package com.rif.backend.RiskFormsUser;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import javax.persistence.*;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 @Entity
 @Table(name = "risk_forms")
@@ -21,7 +21,7 @@ public class RiskFormData {
 
     private Integer sdaNumber;
     private String uploadRIF;
-     @Column(length = 10000)
+    @Column(length = 10000)
     private String issueParticulars;
     private String issueType;
     private Integer riskSEV;
@@ -30,12 +30,13 @@ public class RiskFormData {
     private String riskType;
     private String date;
     private Integer riskRating;
-@Column(length = 10000)
+    @Column(length = 10000)
     private String status;
     private String submissionDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")
+    @JsonBackReference
     private Report report;
 
     @OneToMany(mappedBy = "riskFormData", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -54,7 +55,7 @@ public class RiskFormData {
     @JsonManagedReference
     private Set<ResponsiblePerson> responsiblePersons = new HashSet<>();
 
-    @Transient // Not stored in the DB, just used to handle incoming data
+    @Transient
     private Set<String> responsiblePersonNames = new HashSet<>();
 
     // Getters and Setters
@@ -90,21 +91,13 @@ public class RiskFormData {
         this.issueParticulars = issueParticulars;
     }
 
-public String getIssueType() {
-    return issueType;
-}
+    public String getIssueType() {
+        return issueType;
+    }
 
-public void setIssueType(String issueType) {
-    this.issueType = issueType;
-}
-
-public Set<String> getIssueTypes() {
-    return new HashSet<>(Arrays.asList(issueType.split(",")));
-}
-
-public void setIssueTypes(Set<String> issueTypes) {
-    this.issueType = String.join(",", issueTypes);
-}
+    public void setIssueType(String issueType) {
+        this.issueType = issueType;
+    }
 
     public Integer getRiskSEV() {
         return riskSEV;

@@ -1,6 +1,7 @@
 package com.rif.backend.RiskFormsUser;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.rif.backend.Auth.User;
 
@@ -18,6 +19,7 @@ public class Report {
     private Long id;
 
     @OneToMany(mappedBy = "report", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<RiskFormData> riskFormData = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)

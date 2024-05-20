@@ -2,10 +2,12 @@ package com.rif.backend.RiskFormsUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/riskforms")
@@ -30,11 +32,19 @@ public class RiskFormController {
 
     @GetMapping("/report/{id}")
     public ResponseEntity<?> getReportById(@PathVariable Long id) {
-        Optional<Report> report = reportRepository.findById(id);
+        Optional<Report> report = reportRepository.findByIdWithRiskForms(id);
         if (report.isPresent()) {
-            return ResponseEntity.ok(report.get());
+            return ResponseEntity.ok(new ReportDTO(report.get()));
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/reports")
+    public ResponseEntity<?> getReportsByUser() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        List<Report> reports = reportRepository.findAllByUserEmail(email);
+        List<ReportDTO> reportDTOs = reports.stream().map(ReportDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(reportDTOs);
     }
 }
