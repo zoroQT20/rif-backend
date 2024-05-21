@@ -17,7 +17,6 @@ public class LoginRequest {
     @NotBlank
     private String captchaValue;
 
-    // Getters and Setters
     public String getEmail() {
         return email;
     }

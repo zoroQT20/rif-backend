@@ -1,6 +1,5 @@
 package com.rif.backend.Security;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rif.backend.Auth.User;
 import org.springframework.security.core.GrantedAuthority;

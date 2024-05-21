@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import com.rif.backend.Security.UserDetailsImpl;
+
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,8 +26,10 @@ public class JwtUtils {
                 .collect(Collectors.toList());
 
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername()))
+                .setSubject(userPrincipal.getUsername())
                 .claim("roles", roles)  // Include roles in the token
+                .claim("firstname", userPrincipal.getFirstname())
+                .claim("lastname", userPrincipal.getLastname())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
@@ -39,6 +42,14 @@ public class JwtUtils {
 
     public List<String> getRolesFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("roles", List.class);
+    }
+
+    public String getFirstnameFromJwtToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("firstname", String.class);
+    }
+
+    public String getLastnameFromJwtToken(String token) {
+        return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().get("lastname", String.class);
     }
 
     public boolean validateJwtToken(String authToken) {
