@@ -26,7 +26,9 @@ public class JwtUtils {
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
-                .claim("roles", roles)  // Include roles in the token
+                .claim("roles", roles)  
+                .claim("firstname", userPrincipal.getFirstname()) 
+                .claim("lastname", userPrincipal.getLastname())   
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
