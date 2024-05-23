@@ -12,12 +12,15 @@ import org.springframework.web.bind.annotation.*;
 import com.rif.backend.Payload.JwtResponse;
 import com.rif.backend.Payload.MessageResponse;
 import com.rif.backend.Payload.SignupRequest;
+import com.rif.backend.Payload.ForgotPasswordRequest;
+import com.rif.backend.Payload.PasswordResetRequest;
 import com.rif.backend.Security.UserDetailsImpl;
 import com.rif.backend.Security.jwt.JwtUtils;
 
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -42,6 +45,9 @@ public class AuthController {
 
     @Autowired
     CaptchaService captchaService;
+
+    @Autowired
+    EmailService emailService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -119,5 +125,36 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<?> forgotPassword(@Valid @RequestBody ForgotPasswordRequest forgotPasswordRequest) {
+        Optional<User> userOptional = userRepository.findByEmail(forgotPasswordRequest.getEmail());
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Error: Email not found!"));
+        }
+
+        User user = userOptional.get();
+        String token = jwtUtils.generateJwtTokenForPasswordReset(user);
+        emailService.sendPasswordResetEmail(user.getEmail(), token);
+
+        return ResponseEntity.ok(new MessageResponse("Password reset email sent!"));
+    }
+
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@Valid @RequestBody PasswordResetRequest passwordResetRequest) {
+        String token = passwordResetRequest.getToken();
+        String email = jwtUtils.getUserNameFromJwtToken(token);
+
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.badRequest().body(new MessageResponse("Invalid token."));
+        }
+
+        User user = userOptional.get();
+        user.setPassword(encoder.encode(passwordResetRequest.getNewPassword()));
+        userRepository.save(user);
+
+        return ResponseEntity.ok(new MessageResponse("Password reset successful!"));
     }
 }

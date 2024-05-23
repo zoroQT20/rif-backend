@@ -4,6 +4,8 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+
+import com.rif.backend.Auth.User;
 import com.rif.backend.Security.UserDetailsImpl;
 import java.util.Date;
 import java.util.List;
@@ -17,6 +19,9 @@ public class JwtUtils {
     @Value("${rif.app.jwtExpirationMs}")
     private int jwtExpirationMs;
 
+    @Value("${rif.app.jwtPasswordResetExpirationMs}")
+    private int jwtPasswordResetExpirationMs;
+
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
@@ -26,11 +31,22 @@ public class JwtUtils {
 
         return Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
-                .claim("roles", roles)  
-                .claim("firstname", userPrincipal.getFirstname()) 
-                .claim("lastname", userPrincipal.getLastname())   
+                .claim("roles", roles)
+                .claim("firstname", userPrincipal.getFirstname())
+                .claim("lastname", userPrincipal.getLastname())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
+                .signWith(SignatureAlgorithm.HS512, jwtSecret)
+                .compact();
+    }
+
+    public String generateJwtTokenForPasswordReset(User user) {
+        return Jwts.builder()
+                .setSubject(user.getEmail())
+                .claim("firstname", user.getFirstname())
+                .claim("lastname", user.getLastname())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date((new Date()).getTime() + jwtPasswordResetExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .compact();
     }
