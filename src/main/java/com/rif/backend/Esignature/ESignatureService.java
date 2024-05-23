@@ -1,17 +1,41 @@
 package com.rif.backend.Esignature;
 
+import com.rif.backend.Auth.User;
+import com.rif.backend.Auth.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class ESignatureService {
+    private final ESignatureRepository repository;
+    private final UserRepository userRepository;
+
     @Autowired
-    private ESignatureRepository repository;
+    public ESignatureService(ESignatureRepository repository, UserRepository userRepository) {
+        this.repository = repository;
+        this.userRepository = userRepository;
+    }
 
     @Transactional
-    public ESignature saveESignature(ESignature eSignature) {
-        return repository.save(eSignature);  // This will save the ESignature object to the database
+    public ESignature saveOrUpdateESignature(ESignature eSignature, String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        eSignature.setUser(user);
+
+        return repository.findByUserEmail(email)
+                .map(existingESignature -> {
+                    existingESignature.setProfessionalTitle(eSignature.getProfessionalTitle());
+                    existingESignature.setPostNominalTitle(eSignature.getPostNominalTitle());
+                    existingESignature.setESignaturePhoto(eSignature.getESignaturePhoto());
+                    return repository.save(existingESignature);
+                })
+                .orElseGet(() -> repository.save(eSignature));
+    }
+
+    @Transactional(readOnly = true)
+    public ESignature getESignatureByEmail(String email) {
+        return repository.findByUserEmail(email).orElse(null);
     }
 
     @Transactional(readOnly = true)

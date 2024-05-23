@@ -6,6 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.security.Principal;
+
 @RestController
 @RequestMapping("/api/esignatures")
 public class ESignatureController {
@@ -15,30 +17,37 @@ public class ESignatureController {
 
     @PostMapping("/upload")
     public ResponseEntity<ESignature> uploadESignature(
-        @RequestParam("professionalTitle") String professionalTitle,
-        @RequestParam("postNominalTitle") String postNominalTitle,
-        @RequestParam("file") MultipartFile file) throws Exception {
-        
+            @RequestParam("professionalTitle") String professionalTitle,
+            @RequestParam("postNominalTitle") String postNominalTitle,
+            @RequestParam("file") MultipartFile file,
+            Principal principal) throws Exception {
+
         ESignature eSignature = new ESignature();
         eSignature.setProfessionalTitle(professionalTitle);
         eSignature.setPostNominalTitle(postNominalTitle);
         eSignature.setESignaturePhoto(file.getBytes());
-        
-        ESignature savedESignature = service.saveESignature(eSignature);
+
+        ESignature savedESignature = service.saveOrUpdateESignature(eSignature, principal.getName());
         return ResponseEntity.ok(savedESignature);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<byte[]> getESignature(@PathVariable Long id) {
-        System.out.println("Attempt to fetch ID: " + id);
-        ESignature eSignature = service.findById(id);
+    @GetMapping
+    public ResponseEntity<ESignature> getESignature(Principal principal) {
+        ESignature eSignature = service.getESignatureByEmail(principal.getName());
         if (eSignature == null) {
-            System.out.println("No eSignature found for ID: " + id);
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(eSignature);
+    }
+
+    @GetMapping("/image")
+    public ResponseEntity<byte[]> getESignatureImage(Principal principal) {
+        ESignature eSignature = service.getESignatureByEmail(principal.getName());
+        if (eSignature == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(eSignature.getESignaturePhoto());
     }
-
 }

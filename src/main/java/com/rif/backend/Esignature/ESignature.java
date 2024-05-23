@@ -1,5 +1,7 @@
 package com.rif.backend.Esignature;
 
+import com.rif.backend.Auth.User;
+
 import javax.persistence.*;
 
 @Entity
@@ -19,15 +21,20 @@ public class ESignature {
     @Column(name = "e_signature_photo")
     private byte[] eSignaturePhoto;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
+
     // Default constructor
     public ESignature() {
     }
 
     // Constructor with all fields
-    public ESignature(String professionalTitle, String postNominalTitle, byte[] eSignaturePhoto) {
+    public ESignature(String professionalTitle, String postNominalTitle, byte[] eSignaturePhoto, User user) {
         this.professionalTitle = professionalTitle;
         this.postNominalTitle = postNominalTitle;
         this.eSignaturePhoto = eSignaturePhoto;
+        this.user = user;
     }
 
     // Getters and Setters
@@ -61,5 +68,13 @@ public class ESignature {
 
     public void setESignaturePhoto(byte[] eSignaturePhoto) {
         this.eSignaturePhoto = eSignaturePhoto;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
