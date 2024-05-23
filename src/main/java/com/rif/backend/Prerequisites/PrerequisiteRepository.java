@@ -1,7 +1,8 @@
 package com.rif.backend.Prerequisites;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import java.util.Optional;
 
 public interface PrerequisiteRepository extends JpaRepository<Prerequisite, Long> {
-    // You can add custom query methods here if needed.
+    Optional<Prerequisite> findByUserEmail(String email);
 }

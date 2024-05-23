@@ -1,39 +1,79 @@
 package com.rif.backend.Prerequisites;
 
-import com.rif.backend.Prerequisites.Prerequisite;
-import com.rif.backend.Prerequisites.PrerequisiteRepository;
+import com.rif.backend.Auth.User;
+import com.rif.backend.Auth.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PrerequisiteService {
 
     private final PrerequisiteRepository repository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public PrerequisiteService(PrerequisiteRepository repository) {
+    public PrerequisiteService(PrerequisiteRepository repository, UserRepository userRepository) {
         this.repository = repository;
+        this.userRepository = userRepository;
     }
 
     @Transactional
     public Prerequisite savePrerequisite(Prerequisite prerequisite) {
         if (prerequisite.getInternalStakeholders() != null) {
-            prerequisite.getInternalStakeholders().forEach(stakeholder -> {
-                stakeholder.setPrerequisite(prerequisite);
-            });
+            prerequisite.getInternalStakeholders().forEach(stakeholder -> stakeholder.setPrerequisite(prerequisite));
         }
         if (prerequisite.getExternalStakeholders() != null) {
-            prerequisite.getExternalStakeholders().forEach(stakeholder -> {
-                stakeholder.setPrerequisite(prerequisite);
-            });
+            prerequisite.getExternalStakeholders().forEach(stakeholder -> stakeholder.setPrerequisite(prerequisite));
         }
         return repository.save(prerequisite);
     }
 
-    public List<Prerequisite> listAll() {
-        return repository.findAll();
+    @Transactional
+    public Prerequisite updatePrerequisite(Prerequisite existing, Prerequisite newPrerequisite) {
+        existing.setUnit(newPrerequisite.getUnit());
+
+        // Clear existing stakeholders
+        existing.getInternalStakeholders().clear();
+        existing.getExternalStakeholders().clear();
+
+        // Set new stakeholders
+        if (newPrerequisite.getInternalStakeholders() != null) {
+            newPrerequisite.getInternalStakeholders().forEach(stakeholder -> stakeholder.setPrerequisite(existing));
+            existing.getInternalStakeholders().addAll(newPrerequisite.getInternalStakeholders());
+        }
+        if (newPrerequisite.getExternalStakeholders() != null) {
+            newPrerequisite.getExternalStakeholders().forEach(stakeholder -> stakeholder.setPrerequisite(existing));
+            existing.getExternalStakeholders().addAll(newPrerequisite.getExternalStakeholders());
+        }
+
+        return repository.save(existing);
+    }
+
+    public Optional<Prerequisite> getPrerequisiteByUserEmail(String email) {
+        return repository.findByUserEmail(email);
+    }
+
+    public Prerequisite createOrUpdatePrerequisite(Prerequisite prerequisite, String email) {
+        Optional<Prerequisite> existingPrerequisite = getPrerequisiteByUserEmail(email);
+        if (existingPrerequisite.isPresent()) {
+            return updatePrerequisite(existingPrerequisite.get(), prerequisite);
+        } else {
+            User user = userRepository.findByEmail(email)
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+            prerequisite.setUser(user);
+            setBackReferences(prerequisite);
+            return savePrerequisite(prerequisite);
+        }
+    }
+
+    private void setBackReferences(Prerequisite prerequisite) {
+        if (prerequisite.getInternalStakeholders() != null) {
+            prerequisite.getInternalStakeholders().forEach(stakeholder -> stakeholder.setPrerequisite(prerequisite));
+        }
+        if (prerequisite.getExternalStakeholders() != null) {
+            prerequisite.getExternalStakeholders().forEach(stakeholder -> stakeholder.setPrerequisite(prerequisite));
+        }
     }
 }

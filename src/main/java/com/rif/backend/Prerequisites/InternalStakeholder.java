@@ -2,7 +2,6 @@ package com.rif.backend.Prerequisites;
 
 
 import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
@@ -12,15 +11,14 @@ public class InternalStakeholder {
     private Long id;
 
     private String name;
-    
-@ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "prerequisite_id")
     @JsonBackReference
     private Prerequisite prerequisite;
 
-    // Constructors
-    public InternalStakeholder() {
-    }
+    // Constructors, getters, and setters
+    public InternalStakeholder() {}
 
     public InternalStakeholder(String name, Prerequisite prerequisite) {
         this.name = name;

@@ -1,7 +1,6 @@
 package com.rif.backend.Prerequisites;
 
 import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
@@ -17,14 +16,12 @@ public class ExternalStakeholder {
     @JsonBackReference
     private Prerequisite prerequisite;
 
-    // Constructors
-    public ExternalStakeholder() {
-    }
+    // Constructors, getters, and setters
+    public ExternalStakeholder() {}
 
     public ExternalStakeholder(String name) {
         this.name = name;
     }
-
     // Getters and Setters
     public Long getId() {
         return id;

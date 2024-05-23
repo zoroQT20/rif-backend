@@ -4,9 +4,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
-
+import com.rif.backend.Prerequisites.Prerequisite;
 import com.rif.backend.RiskFormsUser.Report;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -42,8 +41,11 @@ public class User {
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Report> reports = new HashSet<>();
 
-    public User() {
-    }
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Prerequisite prerequisite;
+
+    // Constructors
+    public User() {}
 
     public User(String email, String firstname, String lastname, String password) {
         this.email = email;
@@ -52,7 +54,7 @@ public class User {
         this.password = password;
     }
 
-    // Getters and Setters
+    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -107,5 +109,13 @@ public class User {
 
     public void setReports(Set<Report> reports) {
         this.reports = reports;
+    }
+
+    public Prerequisite getPrerequisite() {
+        return prerequisite;
+    }
+
+    public void setPrerequisite(Prerequisite prerequisite) {
+        this.prerequisite = prerequisite;
     }
 }

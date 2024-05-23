@@ -1,10 +1,13 @@
 package com.rif.backend.Prerequisites;
 
-import com.rif.backend.Prerequisites.Prerequisite;
-import com.rif.backend.Prerequisites.PrerequisiteService;
+import com.rif.backend.Auth.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/prerequisites")
@@ -18,25 +21,23 @@ public class PrerequisiteController {
     }
 
     @PostMapping
-    public ResponseEntity<Prerequisite> createPrerequisite(@RequestBody Prerequisite prerequisite) {
-        // Setting back references before saving
-        setBackReferences(prerequisite);
-        Prerequisite savedPrerequisite = service.savePrerequisite(prerequisite);
+    public ResponseEntity<Prerequisite> createOrUpdatePrerequisite(@RequestBody Prerequisite prerequisite, Principal principal) {
+        String email = principal.getName();
+        Prerequisite savedPrerequisite = service.createOrUpdatePrerequisite(prerequisite, email);
         return ResponseEntity.ok(savedPrerequisite);
     }
 
     @GetMapping
-    public ResponseEntity<Iterable<Prerequisite>> getAllPrerequisites() {
-        return ResponseEntity.ok(service.listAll());
-    }
-
-    // Utility method to set back references
-    private void setBackReferences(Prerequisite prerequisite) {
-        if (prerequisite.getInternalStakeholders() != null) {
-            prerequisite.getInternalStakeholders().forEach(stakeholder -> stakeholder.setPrerequisite(prerequisite));
-        }
-        if (prerequisite.getExternalStakeholders() != null) {
-            prerequisite.getExternalStakeholders().forEach(stakeholder -> stakeholder.setPrerequisite(prerequisite));
+    public ResponseEntity<Prerequisite> getPrerequisite(Principal principal) {
+        Optional<Prerequisite> prerequisite = service.getPrerequisiteByUserEmail(principal.getName());
+        if (prerequisite.isPresent()) {
+            return ResponseEntity.ok(prerequisite.get());
+        } else {
+            // Return an empty prerequisite structure for new users
+            Prerequisite emptyPrerequisite = new Prerequisite();
+            emptyPrerequisite.setInternalStakeholders(new ArrayList<>());
+            emptyPrerequisite.setExternalStakeholders(new ArrayList<>());
+            return ResponseEntity.ok(emptyPrerequisite);
         }
     }
 }

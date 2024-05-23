@@ -1,10 +1,9 @@
 package com.rif.backend.Prerequisites;
 
 import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-
-import java.util.ArrayList;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.rif.backend.Auth.User;
 import java.util.List;
 
 @Entity
@@ -15,7 +14,12 @@ public class Prerequisite {
 
     private String unit;
 
-  @OneToMany(mappedBy = "prerequisite", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonBackReference
+    private User user;
+
+    @OneToMany(mappedBy = "prerequisite", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private List<InternalStakeholder> internalStakeholders;
 
@@ -23,13 +27,14 @@ public class Prerequisite {
     @JsonManagedReference
     private List<ExternalStakeholder> externalStakeholders;
 
-    // Constructors
-    public Prerequisite() {
+    // Constructors, getters, and setters
+    public Prerequisite() {}
+
+    public Prerequisite(String unit, User user) {
+        this.unit = unit;
+        this.user = user;
     }
 
-    public Prerequisite(String unit) {
-        this.unit = unit;
-    }
 
     // Getters and setters
     public Long getId() {
@@ -46,6 +51,14 @@ public class Prerequisite {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public List<InternalStakeholder> getInternalStakeholders() {
