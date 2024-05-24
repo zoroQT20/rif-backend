@@ -26,6 +26,10 @@ public class Report {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Lob
+    @Column(name = "pdf_blob")
+    private byte[] pdfBlob;
+
     public Report() {}
 
     public Long getId() {
@@ -60,5 +64,13 @@ public class Report {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public byte[] getPdfBlob() {
+        return pdfBlob;
+    }
+
+    public void setPdfBlob(byte[] pdfBlob) {
+        this.pdfBlob = pdfBlob;
     }
 }
