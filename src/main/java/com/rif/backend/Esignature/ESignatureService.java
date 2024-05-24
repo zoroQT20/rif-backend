@@ -27,7 +27,9 @@ public class ESignatureService {
                 .map(existingESignature -> {
                     existingESignature.setProfessionalTitle(eSignature.getProfessionalTitle());
                     existingESignature.setPostNominalTitle(eSignature.getPostNominalTitle());
-                    existingESignature.setESignaturePhoto(eSignature.getESignaturePhoto());
+                    if (eSignature.getESignaturePhoto() != null) {
+                        existingESignature.setESignaturePhoto(eSignature.getESignaturePhoto());
+                    }
                     return repository.save(existingESignature);
                 })
                 .orElseGet(() -> repository.save(eSignature));

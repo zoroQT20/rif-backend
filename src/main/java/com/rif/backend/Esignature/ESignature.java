@@ -18,7 +18,7 @@ public class ESignature {
     private String postNominalTitle;
 
     @Lob
-    @Column(name = "e_signature_photo")
+    @Column(name = "e_signature_photo", columnDefinition = "BLOB")
     private byte[] eSignaturePhoto;
 
     @ManyToOne

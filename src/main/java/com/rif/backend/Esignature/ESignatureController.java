@@ -19,13 +19,15 @@ public class ESignatureController {
     public ResponseEntity<ESignature> uploadESignature(
             @RequestParam("professionalTitle") String professionalTitle,
             @RequestParam("postNominalTitle") String postNominalTitle,
-            @RequestParam("file") MultipartFile file,
+            @RequestParam(value = "file", required = false) MultipartFile file,
             Principal principal) throws Exception {
 
         ESignature eSignature = new ESignature();
         eSignature.setProfessionalTitle(professionalTitle);
         eSignature.setPostNominalTitle(postNominalTitle);
-        eSignature.setESignaturePhoto(file.getBytes());
+        if (file != null) {
+            eSignature.setESignaturePhoto(file.getBytes());
+        }
 
         ESignature savedESignature = service.saveOrUpdateESignature(eSignature, principal.getName());
         return ResponseEntity.ok(savedESignature);
