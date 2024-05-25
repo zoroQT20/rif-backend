@@ -33,12 +33,11 @@ public class PrerequisiteService {
     @Transactional
     public Prerequisite updatePrerequisite(Prerequisite existing, Prerequisite newPrerequisite) {
         existing.setUnit(newPrerequisite.getUnit());
+        existing.setUnitType(newPrerequisite.getUnitType());
 
-        // Clear existing stakeholders
         existing.getInternalStakeholders().clear();
         existing.getExternalStakeholders().clear();
 
-        // Set new stakeholders
         if (newPrerequisite.getInternalStakeholders() != null) {
             newPrerequisite.getInternalStakeholders().forEach(stakeholder -> stakeholder.setPrerequisite(existing));
             existing.getInternalStakeholders().addAll(newPrerequisite.getInternalStakeholders());

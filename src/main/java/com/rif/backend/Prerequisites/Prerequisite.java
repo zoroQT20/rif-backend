@@ -13,6 +13,7 @@ public class Prerequisite {
     private Long id;
 
     private String unit;
+    private String unitType; // Added unitType
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -30,13 +31,12 @@ public class Prerequisite {
     // Constructors, getters, and setters
     public Prerequisite() {}
 
-    public Prerequisite(String unit, User user) {
+    public Prerequisite(String unit, String unitType, User user) {
         this.unit = unit;
+        this.unitType = unitType; // Initialize unitType
         this.user = user;
     }
 
-
-    // Getters and setters
     public Long getId() {
         return id;
     }
@@ -51,6 +51,14 @@ public class Prerequisite {
 
     public void setUnit(String unit) {
         this.unit = unit;
+    }
+
+    public String getUnitType() {
+        return unitType;
+    }
+
+    public void setUnitType(String unitType) {
+        this.unitType = unitType;
     }
 
     public User getUser() {

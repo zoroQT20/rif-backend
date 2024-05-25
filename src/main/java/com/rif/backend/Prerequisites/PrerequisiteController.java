@@ -33,7 +33,6 @@ public class PrerequisiteController {
         if (prerequisite.isPresent()) {
             return ResponseEntity.ok(prerequisite.get());
         } else {
-            // Return an empty prerequisite structure for new users
             Prerequisite emptyPrerequisite = new Prerequisite();
             emptyPrerequisite.setInternalStakeholders(new ArrayList<>());
             emptyPrerequisite.setExternalStakeholders(new ArrayList<>());
