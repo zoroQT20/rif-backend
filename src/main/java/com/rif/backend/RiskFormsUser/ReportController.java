@@ -18,6 +18,9 @@ public class ReportController {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private ReportRepository reportRepository;
+
     @PostMapping("/upload")
     public ResponseEntity<String> uploadPdf(@RequestParam("reportId") Long reportId,
                                             @RequestParam("file") MultipartFile file,
@@ -52,4 +55,12 @@ public class ReportController {
         long count = reportService.getReportCountByUnitTypeAndDateRange(unitType, startDate, endDate);
         return ResponseEntity.ok(count);
     }
+
+    @GetMapping("/all-reports")
+    public ResponseEntity<?> getAllReports() {
+        List<Report> reports = reportRepository.findAll();
+        List<ReportDTO> reportDTOs = reports.stream().map(ReportDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(reportDTOs);
+    }
+
 }
