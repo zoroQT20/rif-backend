@@ -13,7 +13,7 @@ public class Prerequisite {
     private Long id;
 
     private String unit;
-    private String unitType; // Added unitType
+    private String unitType;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
@@ -33,7 +33,7 @@ public class Prerequisite {
 
     public Prerequisite(String unit, String unitType, User user) {
         this.unit = unit;
-        this.unitType = unitType; // Initialize unitType
+        this.unitType = unitType;
         this.user = user;
     }
 

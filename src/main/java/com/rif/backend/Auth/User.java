@@ -118,4 +118,8 @@ public class User {
     public void setPrerequisite(Prerequisite prerequisite) {
         this.prerequisite = prerequisite;
     }
+
+    public String getUnitType() {
+        return prerequisite != null ? prerequisite.getUnitType() : null;
+    }
 }

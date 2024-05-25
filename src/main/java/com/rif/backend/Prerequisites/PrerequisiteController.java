@@ -39,4 +39,10 @@ public class PrerequisiteController {
             return ResponseEntity.ok(emptyPrerequisite);
         }
     }
+
+    @GetMapping("/unitTypeCount/{unitType}")
+    public ResponseEntity<Long> getUnitCountByUnitType(@PathVariable String unitType) {
+        long count = service.getUnitCountByUnitType(unitType);
+        return ResponseEntity.ok(count);
+    }
 }

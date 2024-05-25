@@ -75,4 +75,9 @@ public class PrerequisiteService {
             prerequisite.getExternalStakeholders().forEach(stakeholder -> stakeholder.setPrerequisite(prerequisite));
         }
     }
+
+    @Transactional(readOnly = true)
+    public long getUnitCountByUnitType(String unitType) {
+        return repository.countByUnitType(unitType);
+    }
 }
