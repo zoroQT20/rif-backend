@@ -14,7 +14,12 @@ public class EmailService {
     public void sendPasswordResetEmail(String to, String token) {
         String resetUrl = "http://localhost:5173/reset-password?token=" + token;
         String subject = "Password Reset Request";
-        String text = "To reset your password, click the link below:\n" + resetUrl;
+        String text = "Dear User,\n\n" +
+                      "We received a request to reset your password. Please click the link below to choose a new password:\n\n" +
+                      resetUrl + "\n\n" +
+                      "If you did not request a password reset, please ignore this email or contact support if you have any concerns.\n\n" +
+                      "Best regards,\n" +
+                      "ICT Interns";
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
