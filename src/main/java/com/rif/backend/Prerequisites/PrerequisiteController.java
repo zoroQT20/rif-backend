@@ -45,4 +45,12 @@ public class PrerequisiteController {
         long count = service.getUnitCountByUnitType(unitType);
         return ResponseEntity.ok(count);
     }
+
+    @GetMapping("/byUserId/{userId}")
+    public ResponseEntity<Prerequisite> getPrerequisiteByUserId(@PathVariable Long userId) {
+        Optional<Prerequisite> prerequisite = service.getPrerequisiteByUserId(userId);
+        return prerequisite.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.ok(new Prerequisite("Not Available", "", null)));
+    }
+
 }

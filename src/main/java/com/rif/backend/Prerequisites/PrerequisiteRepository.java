@@ -9,4 +9,7 @@ public interface PrerequisiteRepository extends JpaRepository<Prerequisite, Long
 
     @Query("SELECT COUNT(p) FROM Prerequisite p WHERE p.unitType = :unitType")
     long countByUnitType(String unitType);
+
+    Optional<Prerequisite> findByUserId(Long userId);
+
 }

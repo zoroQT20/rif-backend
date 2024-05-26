@@ -80,4 +80,9 @@ public class PrerequisiteService {
     public long getUnitCountByUnitType(String unitType) {
         return repository.countByUnitType(unitType);
     }
+    
+    public Optional<Prerequisite> getPrerequisiteByUserId(Long userId) {
+        return repository.findByUserId(userId);
+    }
+    
 }
