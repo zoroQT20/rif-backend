@@ -18,4 +18,19 @@ public interface RiskFormRepository extends JpaRepository<RiskFormData, Long> {
                    "JOIN prerequisite p ON u.id = p.user_id " +
                    "GROUP BY rf.sda_number, rf.issue_particulars, p.unit, rf.submission_date", nativeQuery = true)
     List<Object[]> findGroupedBySdaNumber();
+
+    @Query(value = "SELECT p.unit_type as unitType, rf.risk_level as riskLevel, rf.submission_date as submissionDate " +
+                   "FROM risk_forms rf " +
+                   "JOIN reports r ON rf.report_id = r.id " +
+                   "JOIN user u ON r.user_id = u.id " +
+                   "JOIN prerequisite p ON u.id = p.user_id " +
+                   "WHERE rf.sda_number = :sdaNumber", nativeQuery = true)
+    List<Object[]> findRiskFormDataBySdaNumber(Integer sdaNumber);
+
+    @Query(value = "SELECT p.unit_type as unitType, rf.sda_number as sdaNumber, rf.risk_level as riskLevel, rf.submission_date as submissionDate " +
+                   "FROM risk_forms rf " +
+                   "JOIN reports r ON rf.report_id = r.id " +
+                   "JOIN user u ON r.user_id = u.id " +
+                   "JOIN prerequisite p ON u.id = p.user_id", nativeQuery = true)
+    List<Object[]> findAllRiskFormData();
 }
