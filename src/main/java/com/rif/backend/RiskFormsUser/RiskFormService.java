@@ -64,7 +64,7 @@ public class RiskFormService {
     public List<RiskFormDataCustomDTO> getRiskFormDataBySdaNumber(Integer sdaNumber) {
         List<Object[]> results = riskFormRepository.findRiskFormDataBySdaNumber(sdaNumber);
         return results.stream()
-                .map(result -> new RiskFormDataCustomDTO((String) result[0], (String) result[1], (String) result[2]))
+                .map(result -> new RiskFormDataCustomDTO((String) result[0], (String) result[1], (String) result[2], (String) result[3]))
                 .collect(Collectors.toList());
     }
 
@@ -72,7 +72,7 @@ public class RiskFormService {
     public List<PrerequisiteDataDTO> getAllRiskFormData() {
         List<Object[]> results = riskFormRepository.findAllRiskFormData();
         return results.stream()
-                .map(result -> new PrerequisiteDataDTO((String) result[0], (Integer) result[1], (String) result[2], (String) result[3]))
+                .map(result -> new PrerequisiteDataDTO((String) result[0], (Integer) result[1], (String) result[2], (String) result[3], (String) result[4]))
                 .collect(Collectors.toList());
     }
 }

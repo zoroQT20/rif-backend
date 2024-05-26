@@ -4,11 +4,13 @@ public class RiskFormDataCustomDTO {
     private String unitType;
     private String riskLevel;
     private String submissionDate;
+    private String riskType; // Added field for Initial and Residual risks
 
-    public RiskFormDataCustomDTO(String unitType, String riskLevel, String submissionDate) {
+    public RiskFormDataCustomDTO(String unitType, String riskLevel, String submissionDate, String riskType) {
         this.unitType = unitType;
         this.riskLevel = riskLevel;
         this.submissionDate = submissionDate;
+        this.riskType = riskType;
     }
 
     // Getters and Setters
@@ -34,5 +36,13 @@ public class RiskFormDataCustomDTO {
 
     public void setSubmissionDate(String submissionDate) {
         this.submissionDate = submissionDate;
+    }
+
+    public String getRiskType() {
+        return riskType;
+    }
+
+    public void setRiskType(String riskType) {
+        this.riskType = riskType;
     }
 }

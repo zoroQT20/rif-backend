@@ -5,12 +5,16 @@ public class PrerequisiteDataDTO {
     private Integer sdaNumber;
     private String riskLevel;
     private String submissionDate;
+    private String riskType; // Added field for Initial and Residual risks
 
-    public PrerequisiteDataDTO(String unitType, Integer sdaNumber, String riskLevel, String submissionDate) {
+
+    public PrerequisiteDataDTO(String unitType, Integer sdaNumber, String riskLevel, String submissionDate,String riskType) {
         this.unitType = unitType;
         this.sdaNumber = sdaNumber;
         this.riskLevel = riskLevel;
         this.submissionDate = submissionDate;
+        this.riskType = riskType;
+
     }
 
     // Getters and Setters
@@ -44,5 +48,12 @@ public class PrerequisiteDataDTO {
 
     public void setSubmissionDate(String submissionDate) {
         this.submissionDate = submissionDate;
+    }
+     public String getRiskType() {
+        return riskType;
+    }
+
+    public void setRiskType(String riskType) {
+        this.riskType = riskType;
     }
 }
