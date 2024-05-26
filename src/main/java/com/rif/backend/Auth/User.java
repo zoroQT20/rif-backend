@@ -122,4 +122,8 @@ public class User {
     public String getUnitType() {
         return prerequisite != null ? prerequisite.getUnitType() : null;
     }
+
+    public String getUnit() {
+        return prerequisite != null ? prerequisite.getUnit() : null;
+    }
 }

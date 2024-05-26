@@ -7,7 +7,9 @@ import com.rif.backend.Auth.User;
 import com.rif.backend.Auth.UserRepository;
 
 import javax.transaction.Transactional;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RiskFormService {
@@ -45,5 +47,16 @@ public class RiskFormService {
                 riskFormRepository.save(formData);
             }
         }
+    }
+
+    public List<RiskFormDataGroupedDTO> getRiskFormDataGroupedBySdaNumber() {
+        List<Object[]> results = riskFormRepository.findGroupedBySdaNumber();
+        return results.stream().map(result -> new RiskFormDataGroupedDTO(
+            (Integer) result[0],
+            (String) result[1],
+            Arrays.asList(((String) result[2]).split(",")),
+            (String) result[3],
+            (String) result[4]
+        )).collect(Collectors.toList());
     }
 }
