@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
+import java.util.List;
 
 @Service
 public class PrerequisiteService {
@@ -85,4 +86,8 @@ public class PrerequisiteService {
         return repository.findByUserId(userId);
     }
     
+    @Transactional(readOnly = true)
+    public List<Prerequisite> getAllPrerequisites() {
+        return repository.findAll();
+    }
 }

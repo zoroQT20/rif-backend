@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/prerequisites")
@@ -53,4 +54,9 @@ public class PrerequisiteController {
                 .orElseGet(() -> ResponseEntity.ok(new Prerequisite("Not Available", "", null)));
     }
 
+    @GetMapping("/all")
+    public ResponseEntity<List<Prerequisite>> getAllPrerequisites() {
+        List<Prerequisite> prerequisites = service.getAllPrerequisites();
+        return ResponseEntity.ok(prerequisites);
+    }
 }
