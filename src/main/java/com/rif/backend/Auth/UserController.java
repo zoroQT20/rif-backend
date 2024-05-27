@@ -50,6 +50,33 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @PutMapping("/{userId}/status")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<User> updateUserStatus(@PathVariable Long userId, @RequestBody StatusUpdateRequest statusUpdateRequest) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        User user = userOptional.get();
+        user.setActive(statusUpdateRequest.isActive());
+        userRepository.save(user);
+
+        return ResponseEntity.ok(user);
+    }
+
+    public static class StatusUpdateRequest {
+        private boolean active;
+
+        public boolean isActive() {
+            return active;
+        }
+
+        public void setActive(boolean active) {
+            this.active = active;
+        }
+    }
+
     public static class RoleUpdateRequest {
         private Long roleId;
 
