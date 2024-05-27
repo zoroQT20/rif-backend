@@ -1,6 +1,5 @@
 package com.rif.backend.Security;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.rif.backend.Auth.User;
 import org.springframework.security.core.GrantedAuthority;
@@ -23,15 +22,18 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
 
+    private boolean active; // Add this field
+
     private Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(Long id, String email, String firstname, String lastname, String password,
+    public UserDetailsImpl(Long id, String email, String firstname, String lastname, String password, boolean active,
                            Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
+        this.active = active; // Set this field
         this.authorities = authorities;
     }
 
@@ -46,6 +48,7 @@ public class UserDetailsImpl implements UserDetails {
                 user.getFirstname(),
                 user.getLastname(),
                 user.getPassword(),
+                user.isActive(), // Include active status
                 authorities);
     }
 
@@ -97,7 +100,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return active; // Use the active field
     }
 
     @Override

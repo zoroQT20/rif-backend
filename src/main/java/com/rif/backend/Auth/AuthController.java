@@ -55,6 +55,16 @@ public class AuthController {
             return ResponseEntity.badRequest().body(new MessageResponse("CAPTCHA verification failed"));
         }
 
+        Optional<User> userOptional = userRepository.findByEmail(loginRequest.getEmail());
+        if (!userOptional.isPresent()) {
+            return ResponseEntity.status(401).body("Error: Invalid email or password");
+        }
+
+        User user = userOptional.get();
+        if (!user.isActive()) {
+            return ResponseEntity.status(403).body("Error: Account is disabled");
+        }
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
