@@ -5,8 +5,10 @@ import com.rif.backend.Auth.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import java.util.Optional;
+
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class PrerequisiteService {
@@ -81,13 +83,18 @@ public class PrerequisiteService {
     public long getUnitCountByUnitType(String unitType) {
         return repository.countByUnitType(unitType);
     }
-    
+
     public Optional<Prerequisite> getPrerequisiteByUserId(Long userId) {
         return repository.findByUserId(userId);
     }
-    
+
     @Transactional(readOnly = true)
     public List<Prerequisite> getAllPrerequisites() {
         return repository.findAll();
+    }
+
+    @Transactional(readOnly = true)
+    public List<String> getAllUnits() {
+        return repository.findAll().stream().map(Prerequisite::getUnit).collect(Collectors.toList());
     }
 }

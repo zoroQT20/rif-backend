@@ -1,14 +1,12 @@
 package com.rif.backend.Prerequisites;
 
-import com.rif.backend.Auth.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.Optional;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/prerequisites")
@@ -58,5 +56,11 @@ public class PrerequisiteController {
     public ResponseEntity<List<Prerequisite>> getAllPrerequisites() {
         List<Prerequisite> prerequisites = service.getAllPrerequisites();
         return ResponseEntity.ok(prerequisites);
+    }
+
+    @GetMapping("/units")
+    public ResponseEntity<List<String>> getAllUnits() {
+        List<String> units = service.getAllUnits();
+        return ResponseEntity.ok(units);
     }
 }
