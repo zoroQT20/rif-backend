@@ -21,6 +21,9 @@ public class Approver {
     @Column(name = "approver_photo", columnDefinition = "BLOB")
     private byte[] approverPhoto;
 
+    @Column(name = "approver_unit")
+    private String approverUnit;  // Updated line
+
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
@@ -30,11 +33,12 @@ public class Approver {
     }
 
     // Constructor with all fields
-    public Approver(String professionalTitle, String postNominalTitle, byte[] approverPhoto, User user) {
+    public Approver(String professionalTitle, String postNominalTitle, byte[] approverPhoto, User user, String approverUnit) {
         this.professionalTitle = professionalTitle;
         this.postNominalTitle = postNominalTitle;
         this.approverPhoto = approverPhoto;
         this.user = user;
+        this.approverUnit = approverUnit;  // Updated line
     }
 
     // Getters and Setters
@@ -68,6 +72,14 @@ public class Approver {
 
     public void setApproverPhoto(byte[] approverPhoto) {
         this.approverPhoto = approverPhoto;
+    }
+
+    public String getApproverUnit() {
+        return approverUnit;
+    }
+
+    public void setApproverUnit(String approverUnit) {
+        this.approverUnit = approverUnit;
     }
 
     public User getUser() {

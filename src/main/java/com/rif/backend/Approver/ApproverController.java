@@ -19,12 +19,14 @@ public class ApproverController {
     public ResponseEntity<Approver> uploadApprover(
             @RequestParam("professionalTitle") String professionalTitle,
             @RequestParam("postNominalTitle") String postNominalTitle,
+            @RequestParam("approverUnit") String approverUnit,  // Updated line
             @RequestParam(value = "file", required = false) MultipartFile file,
             Principal principal) throws Exception {
 
         Approver approver = new Approver();
         approver.setProfessionalTitle(professionalTitle);
         approver.setPostNominalTitle(postNominalTitle);
+        approver.setApproverUnit(approverUnit);  // Updated line
         if (file != null) {
             approver.setApproverPhoto(file.getBytes());
         }

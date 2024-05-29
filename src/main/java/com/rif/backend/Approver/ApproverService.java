@@ -27,6 +27,7 @@ public class ApproverService {
                 .map(existingApprover -> {
                     existingApprover.setProfessionalTitle(approver.getProfessionalTitle());
                     existingApprover.setPostNominalTitle(approver.getPostNominalTitle());
+                    existingApprover.setApproverUnit(approver.getApproverUnit());  // Updated line
                     if (approver.getApproverPhoto() != null) {
                         existingApprover.setApproverPhoto(approver.getApproverPhoto());
                     }
