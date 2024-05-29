@@ -63,4 +63,19 @@ public class ReportController {
         return ResponseEntity.ok(reportDTOs);
     }
 
+        @GetMapping("/unit/{unit}/email/{email}")
+    public ResponseEntity<List<ReportDTO>> getReportsByUserUnitOrApproverUnit(@PathVariable String unit, @PathVariable String email) {
+        List<Report> reports = reportService.getReportsByUserUnitOrApproverUnit(unit, email);
+        List<ReportDTO> reportDTOs = reports.stream()
+                                             .map(ReportDTO::new)
+                                             .collect(Collectors.toList());
+        return ResponseEntity.ok(reportDTOs);
+    }
+
+        @GetMapping("/reportDetails/{reportId}")
+    public ResponseEntity<ReportDetailsDTO> getReportWithDetails(@PathVariable Long reportId) {
+        ReportDetailsDTO reportDetails = reportService.getReportWithDetails(reportId);
+        return ResponseEntity.ok(reportDetails);
+    }
+
 }

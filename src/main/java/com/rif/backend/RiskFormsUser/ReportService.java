@@ -5,6 +5,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.rif.backend.Prerequisites.Prerequisite;
+import com.rif.backend.Prerequisites.PrerequisiteService;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -14,6 +17,10 @@ public class ReportService {
 
     @Autowired
     private ReportRepository reportRepository;
+    @Autowired
+    private PrerequisiteService prerequisiteService;
+
+    
 
     @Transactional
     public void savePdf(Long reportId, MultipartFile file) throws IOException {
@@ -41,4 +48,16 @@ public class ReportService {
     public long getReportCountByUnitTypeAndDateRange(String unitType, String startDate, String endDate) {
         return reportRepository.countByUnitTypeAndDateRange(unitType, startDate, endDate);
     }
+      @Transactional(readOnly = true)
+    public List<Report> getReportsByUserUnitOrApproverUnit(String unit, String email) {
+        return reportRepository.findAllByUserUnitOrApproverUnit(unit, email);
+    }
+
+        @Transactional(readOnly = true)
+    public ReportDetailsDTO getReportWithDetails(Long reportId) {
+        Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
+        Prerequisite prerequisite = prerequisiteService.getPrerequisiteByUserId(report.getUser().getId()).orElse(null);
+        return new ReportDetailsDTO(report, prerequisite);
+    }
+
 }

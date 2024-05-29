@@ -25,4 +25,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
 
     @Query("SELECT COUNT(r) FROM Report r JOIN r.user u JOIN u.prerequisite p WHERE p.unitType = :unitType AND r IN (SELECT rf.report FROM RiskFormData rf WHERE rf.submissionDate BETWEEN :startDate AND :endDate)")
     long countByUnitTypeAndDateRange(@Param("unitType") String unitType, @Param("startDate") String startDate, @Param("endDate") String endDate);
+
+      @Query("SELECT r FROM Report r JOIN r.user u JOIN u.prerequisite p WHERE p.unit = :unit OR p.unit = (SELECT a.approverUnit FROM Approver a WHERE a.user.email = :email)")
+    List<Report> findAllByUserUnitOrApproverUnit(@Param("unit") String unit, @Param("email") String email);
 }
