@@ -2,6 +2,9 @@ package com.rif.backend.Esignature;
 
 import com.rif.backend.Auth.User;
 import com.rif.backend.Auth.UserRepository;
+
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,5 +46,9 @@ public class ESignatureService {
     @Transactional(readOnly = true)
     public ESignature findById(Long id) {
         return repository.findById(id).orElse(null);
+    }
+      @Transactional(readOnly = true)
+    public Optional<ESignature> getESignatureByUserId(Long userId) {
+        return repository.findByUserId(userId);
     }
 }
