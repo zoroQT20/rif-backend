@@ -8,4 +8,6 @@ import java.util.Optional;
 @Repository
 public interface ESignatureRepository extends JpaRepository<ESignature, Long> {
     Optional<ESignature> findByUserEmail(String email);
+
+    Optional<ESignature> findByUserId(Long userId);
 }

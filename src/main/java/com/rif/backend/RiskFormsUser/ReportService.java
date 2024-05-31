@@ -5,8 +5,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.rif.backend.Auth.User;
+import com.rif.backend.Esignature.ESignature;
 import com.rif.backend.Prerequisites.Prerequisite;
 import com.rif.backend.Prerequisites.PrerequisiteService;
+import com.rif.backend.Esignature.ESignatureService;
 
 import java.io.IOException;
 import java.util.List;
@@ -19,6 +22,8 @@ public class ReportService {
     private ReportRepository reportRepository;
     @Autowired
     private PrerequisiteService prerequisiteService;
+       @Autowired
+    private ESignatureService eSignatureService;
 
     
 
@@ -53,11 +58,23 @@ public class ReportService {
         return reportRepository.findAllByUserUnitOrApproverUnit(unit, email);
     }
 
-        @Transactional(readOnly = true)
+      @Transactional(readOnly = true)
+    public Optional<Report> findById(Long reportId) {
+        return reportRepository.findById(reportId);
+    }
+
+   @Transactional(readOnly = true)
     public ReportDetailsDTO getReportWithDetails(Long reportId) {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
         Prerequisite prerequisite = prerequisiteService.getPrerequisiteByUserId(report.getUser().getId()).orElse(null);
-        return new ReportDetailsDTO(report, prerequisite);
+        User user = report.getUser();
+        ESignature esignature = eSignatureService.getESignatureByUserId(user.getId()).orElse(null);
+
+        if (esignature == null) {
+            throw new RuntimeException("Esignature not found");
+        }
+
+        return new ReportDetailsDTO(report, prerequisite, user, esignature);
     }
 
 }

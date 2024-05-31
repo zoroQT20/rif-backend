@@ -7,6 +7,12 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.rif.backend.Auth.User;
+import com.rif.backend.Esignature.ESignature;
+import com.rif.backend.Esignature.ESignatureService;
+import com.rif.backend.Prerequisites.Prerequisite;
+import com.rif.backend.Prerequisites.PrerequisiteService;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +26,14 @@ public class ReportController {
 
     @Autowired
     private ReportRepository reportRepository;
+
+        @Autowired
+    private ESignatureService eSignatureService;
+    
+    
+        @Autowired
+    private PrerequisiteService prerequisiteService;
+
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadPdf(@RequestParam("reportId") Long reportId,
@@ -72,10 +86,18 @@ public class ReportController {
         return ResponseEntity.ok(reportDTOs);
     }
 
-        @GetMapping("/reportDetails/{reportId}")
+   @GetMapping("/reportDetails/{reportId}")
     public ResponseEntity<ReportDetailsDTO> getReportWithDetails(@PathVariable Long reportId) {
-        ReportDetailsDTO reportDetails = reportService.getReportWithDetails(reportId);
+        Report report = reportService.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
+        Prerequisite prerequisite = prerequisiteService.getPrerequisiteByUserId(report.getUser().getId()).orElse(null);
+        User user = report.getUser();
+        ESignature esignature = eSignatureService.getESignatureByUserId(user.getId()).orElse(null);
+
+        if (esignature == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        ReportDetailsDTO reportDetails = new ReportDetailsDTO(report, prerequisite, user, esignature);
         return ResponseEntity.ok(reportDetails);
     }
-
 }
