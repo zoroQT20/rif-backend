@@ -58,6 +58,11 @@ public class PrerequisiteService {
     }
 
     public Prerequisite createOrUpdatePrerequisite(Prerequisite prerequisite, String email) {
+        // Check if unit already exists
+        if (repository.existsByUnit(prerequisite.getUnit())) {
+            throw new IllegalArgumentException("Unit already exists");
+        }
+
         Optional<Prerequisite> existingPrerequisite = getPrerequisiteByUserEmail(email);
         if (existingPrerequisite.isPresent()) {
             return updatePrerequisite(existingPrerequisite.get(), prerequisite);
@@ -96,5 +101,9 @@ public class PrerequisiteService {
     @Transactional(readOnly = true)
     public List<String> getAllUnits() {
         return repository.findAll().stream().map(Prerequisite::getUnit).collect(Collectors.toList());
+    }
+
+    public boolean unitExists(String unit) {
+        return repository.existsByUnit(unit);
     }
 }

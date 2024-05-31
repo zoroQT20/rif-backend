@@ -15,4 +15,6 @@ public interface PrerequisiteRepository extends JpaRepository<Prerequisite, Long
     Optional<Prerequisite> findByUserId(Long userId);
 
     List<Prerequisite> findAll();
+
+    boolean existsByUnit(String unit);
 }

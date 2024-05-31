@@ -21,10 +21,14 @@ public class PrerequisiteController {
     }
 
     @PostMapping
-    public ResponseEntity<Prerequisite> createOrUpdatePrerequisite(@RequestBody Prerequisite prerequisite, Principal principal) {
+    public ResponseEntity<?> createOrUpdatePrerequisite(@RequestBody Prerequisite prerequisite, Principal principal) {
         String email = principal.getName();
-        Prerequisite savedPrerequisite = service.createOrUpdatePrerequisite(prerequisite, email);
-        return ResponseEntity.ok(savedPrerequisite);
+        try {
+            Prerequisite savedPrerequisite = service.createOrUpdatePrerequisite(prerequisite, email);
+            return ResponseEntity.ok(savedPrerequisite);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
     @GetMapping
@@ -63,5 +67,11 @@ public class PrerequisiteController {
     public ResponseEntity<List<String>> getAllUnits() {
         List<String> units = service.getAllUnits();
         return ResponseEntity.ok(units);
+    }
+
+    @GetMapping("/exists")
+    public ResponseEntity<Boolean> checkUnitExists(@RequestParam String unit) {
+        boolean exists = service.unitExists(unit);
+        return ResponseEntity.ok(exists);
     }
 }
