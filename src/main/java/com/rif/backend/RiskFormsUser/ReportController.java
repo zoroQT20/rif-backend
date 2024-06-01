@@ -35,17 +35,7 @@ public class ReportController {
     private PrerequisiteService prerequisiteService;
 
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadPdf(@RequestParam("reportId") Long reportId,
-                                            @RequestParam("file") MultipartFile file,
-                                            @AuthenticationPrincipal UserDetails userDetails) {
-        try {
-            reportService.savePdf(reportId, file);
-            return ResponseEntity.ok("File uploaded successfully.");
-        } catch (IOException e) {
-            return ResponseEntity.status(500).body("File upload failed.");
-        }
-    }
+
 
     @GetMapping("/unitType/{unitType}")
     public ResponseEntity<List<ReportDTO>> getReportsByUnitType(@PathVariable String unitType) {
