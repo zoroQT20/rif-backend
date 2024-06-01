@@ -48,7 +48,7 @@ public class RiskFormController {
         return ResponseEntity.ok(reportDTOs);
     }
 
-    @GetMapping("/groupedBySdaNumber")
+  @GetMapping("/groupedBySdaNumber")
     public ResponseEntity<List<RiskFormDataGroupedDTO>> getRiskFormDataGroupedBySdaNumber(
         @RequestParam(required = false) String startDate,
         @RequestParam(required = false) String endDate,
@@ -68,6 +68,7 @@ public class RiskFormController {
 
         return ResponseEntity.ok(groupedData);
     }
+
 
     @GetMapping("/dataBySdaNumber/{sdaNumber}")
     public ResponseEntity<List<RiskFormDataCustomDTO>> getRiskFormDataBySdaNumber(@PathVariable Integer sdaNumber) {

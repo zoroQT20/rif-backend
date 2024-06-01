@@ -49,14 +49,15 @@ public class RiskFormService {
         }
     }
 
-    public List<RiskFormDataGroupedDTO> getRiskFormDataGroupedBySdaNumber() {
+  public List<RiskFormDataGroupedDTO> getRiskFormDataGroupedBySdaNumber() {
         List<Object[]> results = riskFormRepository.findGroupedBySdaNumber();
         return results.stream().map(result -> new RiskFormDataGroupedDTO(
             (Integer) result[0],
             (String) result[1],
             Arrays.asList(((String) result[2]).split(",")),
             (String) result[3],
-            (String) result[4]
+            (String) result[4],
+            (Integer) result[5] // Add this line to map riskRating
         )).collect(Collectors.toList());
     }
 
