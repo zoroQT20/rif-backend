@@ -44,6 +44,8 @@ public class ReportDTO {
         private Integer riskRating;
         private String status;
         private String submissionDate;
+        private byte[] pdfProof;
+        private String notes;
         private List<OpportunityDTO> opportunities;
         private List<ActionPlanDTO> actionPlans;
         private List<RiskParticularDTO> riskParticulars;
@@ -63,6 +65,8 @@ public class ReportDTO {
             this.riskRating = riskFormData.getRiskRating();
             this.status = riskFormData.getStatus();
             this.submissionDate = riskFormData.getSubmissionDate();
+            this.pdfProof = riskFormData.getPdfProof();
+            this.notes = riskFormData.getNotes();
             this.opportunities = riskFormData.getOpportunities().stream().map(OpportunityDTO::new).collect(Collectors.toList());
             this.actionPlans = riskFormData.getActionPlans().stream().map(ActionPlanDTO::new).collect(Collectors.toList());
             this.riskParticulars = riskFormData.getRiskParticulars().stream().map(RiskParticularDTO::new).collect(Collectors.toList());
@@ -173,6 +177,22 @@ public class ReportDTO {
 
         public void setSubmissionDate(String submissionDate) {
             this.submissionDate = submissionDate;
+        }
+
+        public byte[] getPdfProof() {
+            return pdfProof;
+        }
+
+        public void setPdfProof(byte[] pdfProof) {
+            this.pdfProof = pdfProof;
+        }
+
+        public String getNotes() {
+            return notes;
+        }
+
+        public void setNotes(String notes) {
+            this.notes = notes;
         }
 
         public List<OpportunityDTO> getOpportunities() {

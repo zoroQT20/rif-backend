@@ -1,6 +1,8 @@
 package com.rif.backend.RiskFormsUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,6 +17,7 @@ import com.rif.backend.Prerequisites.PrerequisiteService;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -100,4 +103,18 @@ public class ReportController {
             return ResponseEntity.status(500).body("Failed to update proof and notes: " + e.getMessage());
         }
     }
+
+    @GetMapping("/report/{reportId}/pdf/{riskFormDataId}")
+public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVariable Long riskFormDataId) {
+    Optional<byte[]> pdfProof = reportService.getPdfProof(reportId, riskFormDataId);
+    if (pdfProof.isPresent()) {
+        return ResponseEntity.ok()
+            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"proof.pdf\"")
+            .contentType(MediaType.APPLICATION_PDF)
+            .body(pdfProof.get());
+    } else {
+        return ResponseEntity.notFound().build();
+    }
+}
+
 }

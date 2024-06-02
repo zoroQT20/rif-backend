@@ -34,8 +34,7 @@ public class ReportService {
     @Autowired
     private RiskFormRepository riskFormRepository;
 
-    
-    @Transactional
+ @Transactional
     public void saveRiskFormDataList(List<RiskFormData> formDataList) {
         if (!formDataList.isEmpty()) {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -80,6 +79,16 @@ public class ReportService {
             riskFormRepository.save(riskFormData);
         }
     }
+
+    @Transactional(readOnly = true)
+    public Optional<byte[]> getPdfProof(Long reportId, Long riskFormDataId) {
+        Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
+        return report.getRiskFormData().stream()
+            .filter(riskFormData -> riskFormData.getId().equals(riskFormDataId))
+            .map(RiskFormData::getPdfProof)
+            .findFirst();
+    }
+
     @Transactional(readOnly = true)
     public List<Report> getReportsByUnitType(String unitType) {
         return reportRepository.findAllByUnitType(unitType);
