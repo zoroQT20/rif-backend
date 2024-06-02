@@ -26,7 +26,6 @@ public class Report {
     @JoinColumn(name = "user_id")
     private User user;
 
-
     public Report() {}
 
     public Long getId() {
@@ -62,5 +61,4 @@ public class Report {
     public void setUser(User user) {
         this.user = user;
     }
-
 }

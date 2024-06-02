@@ -27,15 +27,11 @@ public class ReportController {
     @Autowired
     private ReportRepository reportRepository;
 
-        @Autowired
+    @Autowired
     private ESignatureService eSignatureService;
-    
-    
-        @Autowired
+
+    @Autowired
     private PrerequisiteService prerequisiteService;
-
-
-
 
     @GetMapping("/unitType/{unitType}")
     public ResponseEntity<List<ReportDTO>> getReportsByUnitType(@PathVariable String unitType) {
@@ -67,7 +63,7 @@ public class ReportController {
         return ResponseEntity.ok(reportDTOs);
     }
 
-        @GetMapping("/unit/{unit}/email/{email}")
+    @GetMapping("/unit/{unit}/email/{email}")
     public ResponseEntity<List<ReportDTO>> getReportsByUserUnitOrApproverUnit(@PathVariable String unit, @PathVariable String email) {
         List<Report> reports = reportService.getReportsByUserUnitOrApproverUnit(unit, email);
         List<ReportDTO> reportDTOs = reports.stream()
@@ -76,7 +72,7 @@ public class ReportController {
         return ResponseEntity.ok(reportDTOs);
     }
 
-   @GetMapping("/reportDetails/{reportId}")
+    @GetMapping("/reportDetails/{reportId}")
     public ResponseEntity<ReportDetailsDTO> getReportWithDetails(@PathVariable Long reportId) {
         Report report = reportService.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
         Prerequisite prerequisite = prerequisiteService.getPrerequisiteByUserId(report.getUser().getId()).orElse(null);
@@ -89,5 +85,19 @@ public class ReportController {
 
         ReportDetailsDTO reportDetails = new ReportDetailsDTO(report, prerequisite, user, esignature);
         return ResponseEntity.ok(reportDetails);
+    }
+
+   @PostMapping("/update")
+    public ResponseEntity<?> updateProofAndNotes(
+        @RequestParam("reportId") Long reportId,
+        @RequestParam(value = "pdfProofs", required = false) List<MultipartFile> pdfProofs,
+        @RequestParam(value = "notes", required = false) List<String> notes) {
+
+        try {
+            reportService.updateProofAndNotes(reportId, pdfProofs, notes);
+            return ResponseEntity.ok("Proof and notes updated successfully");
+        } catch (IOException e) {
+            return ResponseEntity.status(500).body("Failed to update proof and notes: " + e.getMessage());
+        }
     }
 }

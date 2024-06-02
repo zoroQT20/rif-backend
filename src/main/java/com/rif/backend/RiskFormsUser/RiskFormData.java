@@ -34,6 +34,12 @@ public class RiskFormData {
     private String status;
     private String submissionDate;
 
+    @Lob
+    private byte[] pdfProof;
+
+    @Column(length = 5000)
+    private String notes;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "report_id")
     @JsonBackReference
@@ -161,6 +167,22 @@ public class RiskFormData {
 
     public void setSubmissionDate(String submissionDate) {
         this.submissionDate = submissionDate;
+    }
+
+    public byte[] getPdfProof() {
+        return pdfProof;
+    }
+
+    public void setPdfProof(byte[] pdfProof) {
+        this.pdfProof = pdfProof;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 
     public Report getReport() {
