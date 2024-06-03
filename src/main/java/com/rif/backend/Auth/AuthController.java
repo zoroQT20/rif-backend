@@ -62,31 +62,34 @@ public class AuthController {
 
         Optional<User> userOptional = userRepository.findByEmail(loginRequest.getEmail());
         if (!userOptional.isPresent()) {
-            return ResponseEntity.status(401).body("Error: Invalid email or password");
+            return ResponseEntity.status(401).body(new MessageResponse("Error: Invalid email or password"));
         }
 
         User user = userOptional.get();
         if (!user.isActive()) {
-            return ResponseEntity.status(403).body("Error: Account is disabled");
+            return ResponseEntity.status(403).body(new MessageResponse("Account is disabled"));
         }
 
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            String jwt = jwtUtils.generateJwtToken(authentication);
 
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        String jwt = jwtUtils.generateJwtToken(authentication);
+            UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
+            List<String> roles = userDetails.getAuthorities().stream()
+                    .map(item -> item.getAuthority())
+                    .collect(Collectors.toList());
 
-        UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
-        List<String> roles = userDetails.getAuthorities().stream()
-                .map(item -> item.getAuthority())
-                .collect(Collectors.toList());
-
-        return ResponseEntity.ok(new JwtResponse(jwt,
-                                                userDetails.getId(),
-                                                userDetails.getEmail(),
-                                                userDetails.getFirstname(),
-                                                userDetails.getLastname(),
-                                                roles));
+            return ResponseEntity.ok(new JwtResponse(jwt,
+                                                    userDetails.getId(),
+                                                    userDetails.getEmail(),
+                                                    userDetails.getFirstname(),
+                                                    userDetails.getLastname(),
+                                                    roles));
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body(new MessageResponse("Incorrect password"));
+        }
     }
 
     @PostMapping("/signup")
