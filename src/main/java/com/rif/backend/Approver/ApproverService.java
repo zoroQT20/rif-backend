@@ -45,4 +45,9 @@ public class ApproverService {
     public Approver findById(Long id) {
         return repository.findById(id).orElse(null);
     }
+
+    @Transactional(readOnly = true)
+    public Approver getApproverByUserId(Long userId) {
+        return repository.findByUserId(userId).orElse(null);
+    }
 }

@@ -54,4 +54,13 @@ public class ApproverController {
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(approver.getApproverPhoto());
     }
+
+    @GetMapping("/byUserId/{userId}")
+    public ResponseEntity<Approver> getApproverByUserId(@PathVariable Long userId) {
+        Approver approver = service.getApproverByUserId(userId);
+        if (approver == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(approver);
+    }
 }

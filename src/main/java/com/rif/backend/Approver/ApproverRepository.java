@@ -8,4 +8,5 @@ import java.util.Optional;
 @Repository
 public interface ApproverRepository extends JpaRepository<Approver, Long> {
     Optional<Approver> findByUserEmail(String email);
+    Optional<Approver> findByUserId(Long userId);
 }
