@@ -18,6 +18,8 @@ import com.rif.backend.Security.UserDetailsImpl;
 import com.rif.backend.Security.jwt.JwtUtils;
 
 import javax.validation.Valid;
+
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -48,6 +50,9 @@ public class AuthController {
 
     @Autowired
     EmailService emailService;
+
+    @Autowired
+    private UserService userService;
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -166,5 +171,11 @@ public class AuthController {
         userRepository.save(user);
 
         return ResponseEntity.ok(new MessageResponse("Password reset successful!"));
+    }
+
+    @GetMapping("/check-email")
+    public ResponseEntity<?> checkEmail(@RequestParam String email) {
+        boolean exists = userService.checkEmailExists(email);
+        return ResponseEntity.ok().body(Collections.singletonMap("exists", exists));
     }
 }
