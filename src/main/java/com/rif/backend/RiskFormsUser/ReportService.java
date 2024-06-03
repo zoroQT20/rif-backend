@@ -127,4 +127,19 @@ public class ReportService {
 
         return new ReportDetailsDTO(report, prerequisite, user, esignature);
     }
+     @Transactional
+    public void approveReport(Long reportId) {
+        Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
+        report.setStatus(Report.ReportStatus.APPROVER_APPROVED);
+        report.setApproverComment(null);
+        reportRepository.save(report);
+    }
+
+    @Transactional
+    public void markReportForRevision(Long reportId, String comment) {
+        Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
+        report.setStatus(Report.ReportStatus.APPROVER_FOR_REVISION);
+        report.setApproverComment(comment);
+        reportRepository.save(report);
+    }
 }

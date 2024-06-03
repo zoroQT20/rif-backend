@@ -6,13 +6,18 @@ import java.util.stream.Collectors;
 public class ReportDTO {
     private Long id;
     private List<RiskFormDataDTO> riskFormData;
+        private String status;
+    private String approverComment;
 
     public ReportDTO(Report report) {
         this.id = report.getId();
         this.riskFormData = report.getRiskFormData().stream()
                                   .map(RiskFormDataDTO::new)
                                   .collect(Collectors.toList());
+        this.status = report.getStatus().name();
+        this.approverComment = report.getApproverComment();
     }
+    
 
     public Long getId() {
         return id;
@@ -28,6 +33,22 @@ public class ReportDTO {
 
     public void setRiskFormData(List<RiskFormDataDTO> riskFormData) {
         this.riskFormData = riskFormData;
+    }
+
+      public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getApproverComment() {
+        return approverComment;
+    }
+
+    public void setApproverComment(String approverComment) {
+        this.approverComment = approverComment;
     }
 
     public static class RiskFormDataDTO {

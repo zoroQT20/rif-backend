@@ -16,7 +16,9 @@ import com.rif.backend.Prerequisites.Prerequisite;
 import com.rif.backend.Prerequisites.PrerequisiteService;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -116,5 +118,24 @@ public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVari
         return ResponseEntity.notFound().build();
     }
 }
+
+  @PostMapping("/approve")
+    public ResponseEntity<Map<String, String>> approveReport(@RequestBody Map<String, Long> request) {
+        Long reportId = request.get("reportId");
+        reportService.approveReport(reportId);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Report approved successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/for-revision")
+    public ResponseEntity<Map<String, String>> markReportForRevision(@RequestBody Map<String, Object> request) {
+        Long reportId = ((Number) request.get("reportId")).longValue();
+        String comment = (String) request.get("comment");
+        reportService.markReportForRevision(reportId, comment);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Report marked for revision with comment");
+        return ResponseEntity.ok(response);
+    }
 
 }

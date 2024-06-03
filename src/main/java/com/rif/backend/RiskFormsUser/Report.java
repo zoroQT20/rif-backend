@@ -14,6 +14,12 @@ import java.util.List;
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Report {
 
+    public enum ReportStatus {
+        APPROVER_PENDING,
+        APPROVER_APPROVED,
+        APPROVER_FOR_REVISION
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -25,6 +31,13 @@ public class Report {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private ReportStatus status = ReportStatus.APPROVER_PENDING;
+
+    @Column(name = "approver_comment", length = 1000)
+    private String approverComment;
 
     public Report() {}
 
@@ -60,5 +73,21 @@ public class Report {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public ReportStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ReportStatus status) {
+        this.status = status;
+    }
+
+    public String getApproverComment() {
+        return approverComment;
+    }
+
+    public void setApproverComment(String approverComment) {
+        this.approverComment = approverComment;
     }
 }
