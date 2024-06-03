@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.rif.backend.Auth.User;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,6 +39,9 @@ public class Report {
 
     @Column(name = "approver_comment", length = 1000)
     private String approverComment;
+
+    @Column(name = "approver_approve_date")
+    private LocalDateTime approverApproveDate;
 
     public Report() {}
 
@@ -89,5 +93,13 @@ public class Report {
 
     public void setApproverComment(String approverComment) {
         this.approverComment = approverComment;
+    }
+
+    public LocalDateTime getApproverApproveDate() {
+        return approverApproveDate;
+    }
+
+    public void setApproverApproveDate(LocalDateTime approverApproveDate) {
+        this.approverApproveDate = approverApproveDate;
     }
 }

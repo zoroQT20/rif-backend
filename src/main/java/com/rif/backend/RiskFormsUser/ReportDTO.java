@@ -1,5 +1,7 @@
 package com.rif.backend.RiskFormsUser;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -8,6 +10,8 @@ public class ReportDTO {
     private List<RiskFormDataDTO> riskFormData;
         private String status;
     private String approverComment;
+        private LocalDateTime approverApproveDate; // Add the approverApproveDate field
+
 
     public ReportDTO(Report report) {
         this.id = report.getId();
@@ -16,6 +20,7 @@ public class ReportDTO {
                                   .collect(Collectors.toList());
         this.status = report.getStatus().name();
         this.approverComment = report.getApproverComment();
+                this.approverApproveDate = report.getApproverApproveDate(); 
     }
     
 
@@ -50,7 +55,13 @@ public class ReportDTO {
     public void setApproverComment(String approverComment) {
         this.approverComment = approverComment;
     }
+       public LocalDateTime getApproverApproveDate() {
+        return approverApproveDate;
+    }
 
+    public void setApproverApproveDate(LocalDateTime approverApproveDate) {
+        this.approverApproveDate = approverApproveDate;
+    }
     public static class RiskFormDataDTO {
         private Long id;
         private Integer sdaNumber;

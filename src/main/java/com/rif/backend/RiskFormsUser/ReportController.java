@@ -138,4 +138,5 @@ public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVari
         return ResponseEntity.ok(response);
     }
 
+
 }
