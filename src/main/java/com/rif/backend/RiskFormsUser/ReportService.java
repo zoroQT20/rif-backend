@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.rif.backend.Auth.User;
 import com.rif.backend.Auth.UserRepository;
+import com.rif.backend.Auth.EmailService;
 import com.rif.backend.Esignature.ESignature;
 import com.rif.backend.Prerequisites.Prerequisite;
 import com.rif.backend.Prerequisites.PrerequisiteService;
@@ -34,8 +35,10 @@ public class ReportService {
     private UserRepository userRepository;
     @Autowired
     private RiskFormRepository riskFormRepository;
+    @Autowired
+    private EmailService emailService;
 
- @Transactional
+    @Transactional
     public void saveRiskFormDataList(List<RiskFormData> formDataList) {
         if (!formDataList.isEmpty()) {
             String email = SecurityContextHolder.getContext().getAuthentication().getName();
@@ -128,13 +131,17 @@ public class ReportService {
 
         return new ReportDetailsDTO(report, prerequisite, user, esignature);
     }
-   @Transactional
+
+    @Transactional
     public void approveReport(Long reportId) {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
         report.setStatus(Report.ReportStatus.APPROVER_APPROVED);
-        report.setApproverApproveDate(LocalDateTime.now()); // Set the current date and time
+        report.setApproverApproveDate(LocalDateTime.now());
         report.setApproverComment(null);
         reportRepository.save(report);
+
+        // Send approval email
+        emailService.sendApprovalEmail(report.getUser().getEmail(), report.getId(), report.getApproverApproveDate());
     }
 
     @Transactional
@@ -143,5 +150,8 @@ public class ReportService {
         report.setStatus(Report.ReportStatus.APPROVER_FOR_REVISION);
         report.setApproverComment(comment);
         reportRepository.save(report);
+
+        // Send revision email
+        emailService.sendRevisionEmail(report.getUser().getEmail(), report.getId(), comment, report.getApproverApproveDate());
     }
 }
