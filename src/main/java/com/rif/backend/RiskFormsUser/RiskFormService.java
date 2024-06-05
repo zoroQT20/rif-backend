@@ -57,7 +57,8 @@ public class RiskFormService {
             Arrays.asList(((String) result[2]).split(",")),
             (String) result[3],
             (String) result[4],
-            (Integer) result[5] // Add this line to map riskRating
+            (Integer) result[5],
+            (String) result[6]
         )).collect(Collectors.toList());
     }
 

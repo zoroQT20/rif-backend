@@ -9,14 +9,18 @@ public class RiskFormDataGroupedDTO {
     private String unit;
     private String submissionDate;
     private Integer riskRating;
+    private String riskLevel;
 
-    public RiskFormDataGroupedDTO(Integer sdaNumber, String issueParticulars, List<String> riskParticularDescriptions, String unit, String submissionDate, Integer riskRating) {
+
+    public RiskFormDataGroupedDTO(Integer sdaNumber, String issueParticulars, List<String> riskParticularDescriptions, String unit, String submissionDate, Integer riskRating, String riskLevel) {
         this.sdaNumber = sdaNumber;
         this.issueParticulars = issueParticulars;
         this.riskParticularDescriptions = riskParticularDescriptions;
         this.unit = unit;
         this.submissionDate = submissionDate;
         this.riskRating = riskRating;
+                this.riskLevel = riskLevel;
+
     }
 
     // Getters and Setters
@@ -66,5 +70,12 @@ public class RiskFormDataGroupedDTO {
 
     public void setRiskRating(Integer riskRating) {
         this.riskRating = riskRating;
+    }
+        public String getRiskLevel() {
+        return riskLevel;
+    }
+
+    public void setRiskLevel(String riskLevel) {
+        this.riskLevel = riskLevel;
     }
 }
