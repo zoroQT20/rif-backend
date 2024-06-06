@@ -33,8 +33,14 @@ public class PrerequisiteService {
         return repository.save(prerequisite);
     }
 
-    @Transactional
+@Transactional
     public Prerequisite updatePrerequisite(Prerequisite existing, Prerequisite newPrerequisite) {
+        boolean unitChanged = !existing.getUnit().equals(newPrerequisite.getUnit());
+
+        if (unitChanged && repository.existsByUnit(newPrerequisite.getUnit())) {
+            throw new IllegalArgumentException("Unit already exists");
+        }
+
         existing.setUnit(newPrerequisite.getUnit());
         existing.setUnitType(newPrerequisite.getUnitType());
 
@@ -58,15 +64,14 @@ public class PrerequisiteService {
     }
 
     public Prerequisite createOrUpdatePrerequisite(Prerequisite prerequisite, String email) {
-        // Check if unit already exists
-        if (repository.existsByUnit(prerequisite.getUnit())) {
-            throw new IllegalArgumentException("Unit already exists");
-        }
-
         Optional<Prerequisite> existingPrerequisite = getPrerequisiteByUserEmail(email);
         if (existingPrerequisite.isPresent()) {
             return updatePrerequisite(existingPrerequisite.get(), prerequisite);
         } else {
+            if (repository.existsByUnit(prerequisite.getUnit())) {
+                throw new IllegalArgumentException("Unit already exists");
+            }
+
             User user = userRepository.findByEmail(email)
                     .orElseThrow(() -> new RuntimeException("User not found"));
             prerequisite.setUser(user);
