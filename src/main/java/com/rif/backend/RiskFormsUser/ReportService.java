@@ -18,6 +18,7 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
 import java.sql.Blob;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -132,11 +133,11 @@ public class ReportService {
         return new ReportDetailsDTO(report, prerequisite, user, esignature);
     }
 
-    @Transactional
+@Transactional
     public void approveReport(Long reportId) {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
         report.setStatus(Report.ReportStatus.APPROVER_APPROVED);
-        report.setApproverApproveDate(LocalDateTime.now());
+        report.setApproverApproveDate(LocalDate.now());
         report.setApproverComment(null);
         reportRepository.save(report);
 

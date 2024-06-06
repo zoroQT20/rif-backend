@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.rif.backend.Auth.User;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +41,7 @@ public class Report {
     private String approverComment;
 
     @Column(name = "approver_approve_date")
-    private LocalDateTime approverApproveDate;
+    private LocalDate approverApproveDate;
 
     public Report() {}
 
@@ -95,11 +95,11 @@ public class Report {
         this.approverComment = approverComment;
     }
 
-    public LocalDateTime getApproverApproveDate() {
+    public LocalDate getApproverApproveDate() {
         return approverApproveDate;
     }
 
-    public void setApproverApproveDate(LocalDateTime approverApproveDate) {
+    public void setApproverApproveDate(LocalDate approverApproveDate) {
         this.approverApproveDate = approverApproveDate;
     }
 }

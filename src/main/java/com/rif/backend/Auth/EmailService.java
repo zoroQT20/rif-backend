@@ -6,7 +6,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Service
 public class EmailService {
@@ -14,7 +14,7 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public void sendPasswordResetEmail(String to, String token) {
         String resetUrl = "http://localhost:5173/reset-password?token=" + token;
@@ -34,8 +34,8 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    public void sendApprovalEmail(String to, Long reportId, LocalDateTime submissionDate) {
-        String formattedDate = submissionDate.format(formatter);
+    public void sendApprovalEmail(String to, Long reportId, LocalDate approvalDate) {
+        String formattedDate = approvalDate.format(formatter);
         String subject = "Report Approval Notification";
         String text = "Dear User,\n\n" +
                       "We are pleased to inform you that your report (ID: " + reportId + ") submitted on " + formattedDate + " has been approved. \n\n" +
@@ -51,7 +51,7 @@ public class EmailService {
         mailSender.send(message);
     }
 
-    public void sendRevisionEmail(String to, Long reportId, String comment, LocalDateTime submissionDate) {
+    public void sendRevisionEmail(String to, Long reportId, String comment, LocalDate submissionDate) {
         String formattedDate = submissionDate.format(formatter);
         String subject = "Report Revision Required";
         String text = "Dear User,\n\n" +
