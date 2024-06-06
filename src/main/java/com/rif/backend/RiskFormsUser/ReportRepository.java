@@ -29,7 +29,7 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
       @Query("SELECT r FROM Report r JOIN r.user u JOIN u.prerequisite p WHERE p.unit = :unit OR p.unit = (SELECT a.approverUnit FROM Approver a WHERE a.user.email = :email)")
     List<Report> findAllByUserUnitOrApproverUnit(@Param("unit") String unit, @Param("email") String email);
     
-    @Query("SELECT r FROM Report r WHERE r.status = 'APPROVER_APPROVED'")
+    @Query("SELECT r FROM Report r WHERE r.status = 'APPROVER_APPROVED' OR r.status = 'ADMIN_VERIFIED'")
 List<Report> findAllApprovedReports();
 
 }

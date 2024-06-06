@@ -138,6 +138,13 @@ public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVari
         return ResponseEntity.ok(response);
     }
     
-
+  @PostMapping("/verify")
+    public ResponseEntity<Map<String, String>> verifyReport(@RequestBody Map<String, Long> request) {
+        Long reportId = request.get("reportId");
+        reportService.verifyReport(reportId);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Report verified successfully");
+        return ResponseEntity.ok(response);
+    }
 
 }

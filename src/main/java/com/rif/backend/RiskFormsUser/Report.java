@@ -18,7 +18,8 @@ public class Report {
     public enum ReportStatus {
         APPROVER_PENDING,
         APPROVER_APPROVED,
-        APPROVER_FOR_REVISION
+        APPROVER_FOR_REVISION,
+        ADMIN_VERIFIED
     }
 
     @Id

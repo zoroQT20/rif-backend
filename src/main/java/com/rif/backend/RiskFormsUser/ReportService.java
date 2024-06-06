@@ -155,4 +155,14 @@ public class ReportService {
         // Send revision email
         emailService.sendRevisionEmail(report.getUser().getEmail(), report.getId(), comment, report.getApproverApproveDate());
     }
+
+      @Transactional
+    public void verifyReport(Long reportId) {
+        Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
+        report.setStatus(Report.ReportStatus.ADMIN_VERIFIED);
+        reportRepository.save(report);
+
+        // Send verification email
+        emailService.sendVerificationEmail(report.getUser().getEmail(), report.getId(), LocalDate.now());
+    }
 }

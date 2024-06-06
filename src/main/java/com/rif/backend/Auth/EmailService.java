@@ -38,7 +38,7 @@ public class EmailService {
         String formattedDate = approvalDate.format(formatter);
         String subject = "Report Approval Notification";
         String text = "Dear User,\n\n" +
-                      "We are pleased to inform you that your report (ID: " + reportId + ") submitted on " + formattedDate + " has been approved. \n\n" +
+                      "We are pleased to inform you that your report (ID: " + reportId + ") submitted on " + formattedDate + " has been approved and is now awaiting verification from the Office of Planning and Quality Management (OPQM). \n\n" +
                       "If you have any questions, please do not hesitate to contact us.\n\n" +
                       "Best regards,\n" +
                       "ICT Support Team";
@@ -59,6 +59,23 @@ public class EmailService {
                       "Reviewer Comments: " + comment + "\n\n" +
                       "Please address the comments and resubmit your report at your earliest convenience. If you have any questions, feel free to contact us.\n\n" +
                       "Thank you,\n" +
+                      "ICT Support Team";
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+
+        mailSender.send(message);
+    }
+
+    public void sendVerificationEmail(String to, Long reportId, LocalDate verificationDate) {
+        String formattedDate = verificationDate.format(formatter);
+        String subject = "Report Verification Notification";
+        String text = "Dear User,\n\n" +
+                      "We are pleased to inform you that your report (ID: " + reportId + ") submitted on " + formattedDate + " has been verified by the Office of Planning and Quality Management (OPQM). \n\n" +
+                      "If you have any questions, please do not hesitate to contact us.\n\n" +
+                      "Best regards,\n" +
                       "ICT Support Team";
 
         SimpleMailMessage message = new SimpleMailMessage();
