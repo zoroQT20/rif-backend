@@ -61,12 +61,12 @@ public class ReportController {
         return ResponseEntity.ok(count);
     }
 
-    @GetMapping("/all-reports")
-    public ResponseEntity<?> getAllReports() {
-        List<Report> reports = reportRepository.findAll();
-        List<ReportDTO> reportDTOs = reports.stream().map(ReportDTO::new).collect(Collectors.toList());
-        return ResponseEntity.ok(reportDTOs);
-    }
+@GetMapping("/all-reports")
+public ResponseEntity<List<ReportDTO>> getAllReports() {
+    List<Report> reports = reportRepository.findAllApprovedReports();
+    List<ReportDTO> reportDTOs = reports.stream().map(ReportDTO::new).collect(Collectors.toList());
+    return ResponseEntity.ok(reportDTOs);
+}
 
     @GetMapping("/unit/{unit}/email/{email}")
     public ResponseEntity<List<ReportDTO>> getReportsByUserUnitOrApproverUnit(@PathVariable String unit, @PathVariable String email) {
@@ -137,6 +137,7 @@ public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVari
         response.put("message", "Report marked for revision with comment");
         return ResponseEntity.ok(response);
     }
+    
 
 
 }
