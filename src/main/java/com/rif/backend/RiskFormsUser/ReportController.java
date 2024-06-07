@@ -2,6 +2,7 @@ package com.rif.backend.RiskFormsUser;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -146,5 +147,9 @@ public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVari
         response.put("message", "Report verified successfully");
         return ResponseEntity.ok(response);
     }
-
+      @GetMapping("/approverDetails/{reportId}")
+    public ResponseEntity<ApproverDetailsDTO> getApproverDetails(@PathVariable Long reportId) {
+        ApproverDetailsDTO approverDetails = reportService.getApproverDetails(reportId);
+        return ResponseEntity.ok(approverDetails);
+    }
 }

@@ -1,5 +1,9 @@
 package com.rif.backend.RiskFormsUser;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -8,6 +12,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.rif.backend.Auth.User;
 import com.rif.backend.Auth.UserRepository;
+import com.rif.backend.Approver.Approver;
+import com.rif.backend.Approver.ApproverRepository;
 import com.rif.backend.Auth.EmailService;
 import com.rif.backend.Esignature.ESignature;
 import com.rif.backend.Prerequisites.Prerequisite;
@@ -26,8 +32,13 @@ import java.util.Optional;
 @Service
 public class ReportService {
 
+        private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
+
+
     @Autowired
     private ReportRepository reportRepository;
+     @Autowired
+    private ApproverRepository approverRepository;
     @Autowired
     private PrerequisiteService prerequisiteService;
     @Autowired
@@ -165,4 +176,25 @@ public class ReportService {
         // Send verification email
         emailService.sendVerificationEmail(report.getUser().getEmail(), report.getId(), LocalDate.now());
     }
+
+@Transactional(readOnly = true)
+    public ApproverDetailsDTO getApproverDetails(Long reportId) {
+        // Fetch the prerequisite unit based on the reportId
+        String prerequisiteUnit = reportRepository.findPrerequisiteUnitByReportId(reportId)
+                .orElseThrow(() -> new RuntimeException("Prerequisite unit not found for report ID " + reportId));
+
+        // Find the approver based on the prerequisite unit
+        Approver approver = approverRepository.findByApproverUnit(prerequisiteUnit)
+                .orElseThrow(() -> new RuntimeException("Approver not found for unit " + prerequisiteUnit));
+
+        // Map the approver entity to approver details DTO
+        return new ApproverDetailsDTO(
+                approver.getProfessionalTitle(),
+                approver.getPostNominalTitle(),
+                approver.getApproverPhoto(),
+                approver.getUser().getFirstname(),
+                approver.getUser().getLastname()
+        );
+    }
+
 }

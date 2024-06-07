@@ -9,4 +9,6 @@ import java.util.Optional;
 public interface ApproverRepository extends JpaRepository<Approver, Long> {
     Optional<Approver> findByUserEmail(String email);
     Optional<Approver> findByUserId(Long userId);
+    Optional<Approver> findByApproverUnit(String approverUnit);
+
 }
