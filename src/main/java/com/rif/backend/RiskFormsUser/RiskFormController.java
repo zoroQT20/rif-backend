@@ -30,15 +30,16 @@ public class RiskFormController {
         }
     }
 
-    @GetMapping("/report/{id}")
-    public ResponseEntity<?> getReportById(@PathVariable Long id) {
-        Optional<Report> report = reportRepository.findByIdWithRiskForms(id);
-        if (report.isPresent()) {
-            return ResponseEntity.ok(new ReportDTO(report.get()));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+@GetMapping("/report/{id}")
+public ResponseEntity<?> getReportById(@PathVariable Long id) {
+    Optional<Report> report = reportRepository.findByIdWithRiskForms(id);
+    if (report.isPresent()) {
+        return ResponseEntity.ok(new ReportDTO(report.get()));
+    } else {
+        return ResponseEntity.notFound().build();
     }
+}
+
 
     @GetMapping("/reports")
     public ResponseEntity<?> getReportsByUser() {
@@ -81,4 +82,22 @@ public class RiskFormController {
         List<PrerequisiteDataDTO> data = riskFormService.getAllRiskFormData();
         return ResponseEntity.ok(data);
     }
+  @PostMapping("/updateRiskFormData")
+public ResponseEntity<?> updateRiskFormData(@RequestParam Long reportId, @RequestBody List<RiskFormData> formDataList) {
+    try {
+        Optional<Report> existingReport = reportRepository.findById(reportId);
+        if (!existingReport.isPresent()) {
+            return ResponseEntity.badRequest().body("Report not found with ID: " + reportId);
+        }
+
+        formDataList.forEach(formData -> formData.setReport(existingReport.get()));
+        riskFormService.saveRiskFormDataList(formDataList);
+        return ResponseEntity.ok("Risk form data updated successfully!");
+    } catch (Exception e) {
+        e.printStackTrace();
+        return ResponseEntity.badRequest().body("Failed to update risk form data: " + e.getMessage());
+    }
+}
+
+
 }

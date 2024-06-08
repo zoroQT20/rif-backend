@@ -14,8 +14,8 @@ public interface ReportRepository extends JpaRepository<Report, Long> {
     @Query("SELECT r FROM Report r WHERE r.user.email = :email")
     List<Report> findAllByUserEmail(String email);
 
-    @Query("SELECT r FROM Report r LEFT JOIN FETCH r.riskFormData WHERE r.id = :id")
-    Optional<Report> findByIdWithRiskForms(Long id);
+@Query("SELECT r FROM Report r LEFT JOIN FETCH r.riskFormData WHERE r.id = :id")
+Optional<Report> findByIdWithRiskForms(@Param("id") Long id);
 
     @Query("SELECT r FROM Report r JOIN r.user u JOIN u.prerequisite p WHERE p.unitType = :unitType")
     List<Report> findAllByUnitType(String unitType);
