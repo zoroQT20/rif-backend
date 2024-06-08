@@ -24,7 +24,7 @@ public class EmailService {
                       resetUrl + "\n\n" +
                       "If you did not request a password reset, please disregard this email or contact our support team if you have any concerns.\n\n" +
                       "Thank you,\n" +
-                      "ICT Interns Support Team";
+                      "Office of Planning and Quality Management (OPQM)";
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -41,7 +41,7 @@ public class EmailService {
                       "We are pleased to inform you that your Risk Identification Form (ID: " + reportId + ") submitted on " + formattedDate + " has been approved and is now awaiting verification from the Office of Planning and Quality Management (OPQM). \n\n" +
                       "If you have any questions, please do not hesitate to contact us.\n\n" +
                       "Best regards,\n" +
-                      "ICT Support Team";
+                      "Office of Planning and Quality Management (OPQM)";
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -59,7 +59,7 @@ public class EmailService {
                       "Reviewer Comments: " + comment + "\n\n" +
                       "Please address the comments and resubmit your Risk Identification Form at your earliest convenience. If you have any questions, feel free to contact us.\n\n" +
                       "Thank you,\n" +
-                      "ICT Support Team";
+                      "Office of Planning and Quality Management (OPQM)";
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -76,7 +76,7 @@ public class EmailService {
                       "We are pleased to inform you that your Risk Identification Form (ID: " + reportId + ") submitted on " + formattedDate + " has been verified by the Office of Planning and Quality Management (OPQM). \n\n" +
                       "If you have any questions, please do not hesitate to contact us.\n\n" +
                       "Best regards,\n" +
-                      "ICT Support Team";
+                      "Office of Planning and Quality Management (OPQM)";
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
