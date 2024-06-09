@@ -75,6 +75,12 @@ public class EmailService {
         User user = userRepository.findByEmail(to).orElseThrow(() -> new RuntimeException("User not found"));
         Notification userNotification = new Notification(user, "Password reset email sent.", LocalDateTime.now());
         notificationRepository.save(userNotification);
+
+        // Create notification for the approver
+        String approverEmail = getCurrentApproverEmail();
+        User approver = userRepository.findByEmail(approverEmail).orElseThrow(() -> new RuntimeException("Approver not found"));
+        Notification approverNotification = new Notification(approver, "Password reset email sent to user " + user.getEmail(), LocalDateTime.now());
+        notificationRepository.save(approverNotification);
     }
 
     public void sendRevisionEmail(String to, Long reportId, String comment, LocalDate submissionDate) {
