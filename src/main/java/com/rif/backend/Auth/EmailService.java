@@ -6,6 +6,8 @@ import com.rif.backend.Auth.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -25,15 +27,33 @@ public class EmailService {
     private NotificationRepository notificationRepository;
 
     public void sendApprovalEmail(String to, Long reportId, LocalDate approvalDate) {
-        // Existing email sending code...
+        String formattedDate = approvalDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String subject = "YellowAlert - Risk Identification Form Approval Notification";
+        String text = "Dear User,\n\n" +
+                      "We are pleased to inform you that your Risk Identification Form (ID: " + reportId + ") submitted on " + formattedDate + " has been approved and is now awaiting verification from the Office of Planning and Quality Management (OPQM). \n\n" +
+                      "If you have any questions, please do not hesitate to contact us.\n\n" +
+                      "Best regards,\n" +
+                      "Office of Planning and Quality Management (OPQM)";
 
-        // Create notification
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+
+        mailSender.send(message);
+
+        // Create notification for the user
         User user = userRepository.findByEmail(to).orElseThrow(() -> new RuntimeException("User not found"));
-        Notification notification = new Notification(user, "Your Risk Identification Form has been approved.", LocalDateTime.now());
-        notificationRepository.save(notification);
+        Notification userNotification = new Notification(user, "Your Risk Identification Form (ID: " + reportId + ") has been approved.", LocalDateTime.now());
+        notificationRepository.save(userNotification);
+
+        // Create notification for the approver
+        String approverEmail = getCurrentApproverEmail();
+        User approver = userRepository.findByEmail(approverEmail).orElseThrow(() -> new RuntimeException("Approver not found"));
+        Notification approverNotification = new Notification(approver, "You have approved Risk Identification Form (ID: " + reportId + ").", LocalDateTime.now());
+        notificationRepository.save(approverNotification);
     }
 
-    // Other email methods with similar notification creation
     public void sendPasswordResetEmail(String to, String token) {
         String resetUrl = "http://localhost:5173/reset-password?token=" + token;
         String subject = "YellowAlert - Password Reset Request";
@@ -51,10 +71,10 @@ public class EmailService {
 
         mailSender.send(message);
 
-        // Create notification
+        // Create notification for the user
         User user = userRepository.findByEmail(to).orElseThrow(() -> new RuntimeException("User not found"));
-        Notification notification = new Notification(user, "Password reset email sent.", LocalDateTime.now());
-        notificationRepository.save(notification);
+        Notification userNotification = new Notification(user, "Password reset email sent.", LocalDateTime.now());
+        notificationRepository.save(userNotification);
     }
 
     public void sendRevisionEmail(String to, Long reportId, String comment, LocalDate submissionDate) {
@@ -74,10 +94,16 @@ public class EmailService {
 
         mailSender.send(message);
 
-        // Create notification
+        // Create notification for the user
         User user = userRepository.findByEmail(to).orElseThrow(() -> new RuntimeException("User not found"));
-        Notification notification = new Notification(user, "Risk Identification Form requires revision.", LocalDateTime.now());
-        notificationRepository.save(notification);
+        Notification userNotification = new Notification(user, "Risk Identification Form (ID: " + reportId + ") requires revision.", LocalDateTime.now());
+        notificationRepository.save(userNotification);
+
+        // Create notification for the approver
+        String approverEmail = getCurrentApproverEmail();
+        User approver = userRepository.findByEmail(approverEmail).orElseThrow(() -> new RuntimeException("Approver not found"));
+        Notification approverNotification = new Notification(approver, "You have requested a revision for Risk Identification Form (ID: " + reportId + ").", LocalDateTime.now());
+        notificationRepository.save(approverNotification);
     }
 
     public void sendVerificationEmail(String to, Long reportId, LocalDate verificationDate) {
@@ -96,9 +122,21 @@ public class EmailService {
 
         mailSender.send(message);
 
-        // Create notification
+        // Create notification for the user
         User user = userRepository.findByEmail(to).orElseThrow(() -> new RuntimeException("User not found"));
-        Notification notification = new Notification(user, "Your Risk Identification Form has been verified.", LocalDateTime.now());
-        notificationRepository.save(notification);
+        Notification userNotification = new Notification(user, "Your Risk Identification Form (ID: " + reportId + ") has been verified.", LocalDateTime.now());
+        notificationRepository.save(userNotification);
+
+        // Create notification for the approver
+        String approverEmail = getCurrentApproverEmail();
+        User approver = userRepository.findByEmail(approverEmail).orElseThrow(() -> new RuntimeException("Approver not found"));
+        Notification approverNotification = new Notification(approver, "You have verified Risk Identification Form (ID: " + reportId + ").", LocalDateTime.now());
+        notificationRepository.save(approverNotification);
+    }
+
+    private String getCurrentApproverEmail() {
+        // Logic to get the current approver's email
+        UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return userDetails.getUsername();
     }
 }
