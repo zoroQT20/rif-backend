@@ -2,42 +2,33 @@ package com.rif.backend.RiskFormsUser;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-
 import com.rif.backend.Auth.User;
 import com.rif.backend.Auth.UserRepository;
 import com.rif.backend.Approver.Approver;
 import com.rif.backend.Approver.ApproverRepository;
 import com.rif.backend.Auth.EmailService;
 import com.rif.backend.Esignature.ESignature;
+import com.rif.backend.Esignature.ESignatureService;
 import com.rif.backend.Prerequisites.Prerequisite;
 import com.rif.backend.Prerequisites.PrerequisiteService;
-import com.rif.backend.Esignature.ESignatureService;
 
-import javax.sql.rowset.serial.SerialBlob;
 import java.io.IOException;
-import java.sql.Blob;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class ReportService {
 
-        private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(ReportService.class);
 
     @Autowired
     private ReportRepository reportRepository;
-     @Autowired
+    @Autowired
     private ApproverRepository approverRepository;
     @Autowired
     private PrerequisiteService prerequisiteService;
@@ -121,7 +112,7 @@ public class ReportService {
         return new ReportDetailsDTO(report, prerequisite, user, esignature);
     }
 
-@Transactional
+    @Transactional
     public void approveReport(Long reportId) {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
         report.setStatus(Report.ReportStatus.APPROVER_APPROVED);
@@ -144,7 +135,7 @@ public class ReportService {
         emailService.sendRevisionEmail(report.getUser().getEmail(), report.getId(), comment, report.getApproverApproveDate());
     }
 
-      @Transactional
+    @Transactional
     public void verifyReport(Long reportId) {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
         report.setStatus(Report.ReportStatus.ADMIN_VERIFIED);
@@ -154,7 +145,30 @@ public class ReportService {
         emailService.sendVerificationEmail(report.getUser().getEmail(), report.getId(), LocalDate.now());
     }
 
-@Transactional(readOnly = true)
+    // New functions for admin-specific email notifications
+
+    @Transactional
+    public void adminVerifyReport(Long reportId) {
+        Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
+        report.setStatus(Report.ReportStatus.ADMIN_VERIFIED);
+        reportRepository.save(report);
+
+        // Send verification email and notifications
+        emailService.sendAdminVerificationEmail(report.getUser().getEmail(), report.getId(), LocalDate.now());
+    }
+
+    @Transactional
+    public void adminMarkReportForRevision(Long reportId, String comment) {
+        Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
+        report.setStatus(Report.ReportStatus.ADMIN_FOR_REVISION);
+        report.setAdminComment(comment);
+        reportRepository.save(report);
+
+        // Send revision email and notifications
+        emailService.sendAdminRevisionEmail(report.getUser().getEmail(), report.getId(), comment, LocalDate.now());
+    }
+
+    @Transactional(readOnly = true)
     public ApproverDetailsDTO getApproverDetails(Long reportId) {
         // Fetch the prerequisite unit based on the reportId
         String prerequisiteUnit = reportRepository.findPrerequisiteUnitByReportId(reportId)
@@ -173,5 +187,4 @@ public class ReportService {
                 approver.getUser().getLastname()
         );
     }
-
 }

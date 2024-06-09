@@ -152,4 +152,23 @@ public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVari
         ApproverDetailsDTO approverDetails = reportService.getApproverDetails(reportId);
         return ResponseEntity.ok(approverDetails);
     }
+
+    @PostMapping("/admin-verify")
+    public ResponseEntity<Map<String, String>> adminVerifyReport(@RequestBody Map<String, Long> request) {
+        Long reportId = request.get("reportId");
+        reportService.adminVerifyReport(reportId);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Report verified by admin successfully");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/admin-for-revision")
+    public ResponseEntity<Map<String, String>> adminMarkReportForRevision(@RequestBody Map<String, Object> request) {
+        Long reportId = ((Number) request.get("reportId")).longValue();
+        String comment = (String) request.get("comment");
+        reportService.adminMarkReportForRevision(reportId, comment);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Report marked for revision by admin with comment");
+        return ResponseEntity.ok(response);
+    }
 }

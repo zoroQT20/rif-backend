@@ -19,7 +19,8 @@ public class Report {
         APPROVER_PENDING,
         APPROVER_APPROVED,
         APPROVER_FOR_REVISION,
-        ADMIN_VERIFIED
+        ADMIN_VERIFIED,
+        ADMIN_FOR_REVISION
     }
 
     @Id
@@ -40,16 +41,18 @@ public class Report {
 
     @Column(name = "approver_comment", length = 1000)
     private String approverComment;
-
+    
+    @Column(name = "admin_comment", length = 1000)
+    private String adminComment;
+    
     @Column(name = "approver_approve_date")
     private LocalDate approverApproveDate;
 
     public Report() {}
 
     public Report(Long id) {
-    this.id = id;
-}
-
+        this.id = id;
+    }
 
     public Long getId() {
         return id;
@@ -107,5 +110,13 @@ public class Report {
 
     public void setApproverApproveDate(LocalDate approverApproveDate) {
         this.approverApproveDate = approverApproveDate;
+    }
+
+    public String getAdminComment() {
+        return adminComment;
+    }
+
+    public void setAdminComment(String adminComment) {
+        this.adminComment = adminComment;
     }
 }

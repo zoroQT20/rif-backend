@@ -48,7 +48,7 @@ public class EmailService {
         notificationRepository.save(userNotification);
 
         // Create notification for the approver
-        String approverEmail = getCurrentApproverEmail();
+        String approverEmail = getCurrentUserEmail();
         User approver = userRepository.findByEmail(approverEmail).orElseThrow(() -> new RuntimeException("Approver not found"));
         Notification approverNotification = new Notification(approver, "You have approved Risk Identification Form (ID: " + reportId + ").", LocalDateTime.now());
         notificationRepository.save(approverNotification);
@@ -77,7 +77,7 @@ public class EmailService {
         notificationRepository.save(userNotification);
 
         // Create notification for the approver
-        String approverEmail = getCurrentApproverEmail();
+        String approverEmail = getCurrentUserEmail();
         User approver = userRepository.findByEmail(approverEmail).orElseThrow(() -> new RuntimeException("Approver not found"));
         Notification approverNotification = new Notification(approver, "Password reset email sent to user " + user.getEmail(), LocalDateTime.now());
         notificationRepository.save(approverNotification);
@@ -106,7 +106,7 @@ public class EmailService {
         notificationRepository.save(userNotification);
 
         // Create notification for the approver
-        String approverEmail = getCurrentApproverEmail();
+        String approverEmail = getCurrentUserEmail();
         User approver = userRepository.findByEmail(approverEmail).orElseThrow(() -> new RuntimeException("Approver not found"));
         Notification approverNotification = new Notification(approver, "You have requested a revision for Risk Identification Form (ID: " + reportId + ").", LocalDateTime.now());
         notificationRepository.save(approverNotification);
@@ -133,15 +133,74 @@ public class EmailService {
         Notification userNotification = new Notification(user, "Your Risk Identification Form (ID: " + reportId + ") has been verified.", LocalDateTime.now());
         notificationRepository.save(userNotification);
 
-        // Create notification for the approver
-        String approverEmail = getCurrentApproverEmail();
-        User approver = userRepository.findByEmail(approverEmail).orElseThrow(() -> new RuntimeException("Approver not found"));
-        Notification approverNotification = new Notification(approver, "You have verified Risk Identification Form (ID: " + reportId + ").", LocalDateTime.now());
-        notificationRepository.save(approverNotification);
+        // Create notification for the admin
+        String adminEmail = getCurrentUserEmail();
+        User admin = userRepository.findByEmail(adminEmail).orElseThrow(() -> new RuntimeException("Admin not found"));
+        Notification adminNotification = new Notification(admin, "You have verified Risk Identification Form (ID: " + reportId + ").", LocalDateTime.now());
+        notificationRepository.save(adminNotification);
     }
 
-    private String getCurrentApproverEmail() {
-        // Logic to get the current approver's email
+    // New functions for admin-specific email notifications
+
+    public void sendAdminVerificationEmail(String to, Long reportId, LocalDate verificationDate) {
+        String formattedDate = verificationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String subject = "YellowAlert - Report Verification Notification";
+        String text = "Dear User,\n\n" +
+                      "We are pleased to inform you that your Risk Identification Form (ID: " + reportId + ") submitted on " + formattedDate + " has been verified by the Office of Planning and Quality Management (OPQM). \n\n" +
+                      "If you have any questions, please do not hesitate to contact us.\n\n" +
+                      "Best regards,\n" +
+                      "Office of Planning and Quality Management (OPQM)";
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+
+        mailSender.send(message);
+
+        // Create notification for the user
+        User user = userRepository.findByEmail(to).orElseThrow(() -> new RuntimeException("User not found"));
+        Notification userNotification = new Notification(user, "Your Risk Identification Form (ID: " + reportId + ") has been verified by admin.", LocalDateTime.now());
+        notificationRepository.save(userNotification);
+
+        // Create notification for the admin
+        String adminEmail = getCurrentUserEmail();
+        User admin = userRepository.findByEmail(adminEmail).orElseThrow(() -> new RuntimeException("Admin not found"));
+        Notification adminNotification = new Notification(admin, "You have verified Risk Identification Form (ID: " + reportId + ") as an admin.", LocalDateTime.now());
+        notificationRepository.save(adminNotification);
+    }
+
+    public void sendAdminRevisionEmail(String to, Long reportId, String comment, LocalDate submissionDate) {
+        String formattedDate = submissionDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String subject = "YellowAlert - Risk Identification Form Revision Required";
+        String text = "Dear User,\n\n" +
+                      "Your Risk Identification Form (ID: " + reportId + ") submitted on " + formattedDate + " has been reviewed and requires revision. \n\n" +
+                      "Reviewer Comments: " + comment + "\n\n" +
+                      "Please address the comments and resubmit your Risk Identification Form at your earliest convenience. If you have any questions, feel free to contact us.\n\n" +
+                      "Thank you,\n" +
+                      "Office of Planning and Quality Management (OPQM)";
+
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(to);
+        message.setSubject(subject);
+        message.setText(text);
+
+        mailSender.send(message);
+
+        // Create notification for the user
+        User user = userRepository.findByEmail(to).orElseThrow(() -> new RuntimeException("User not found"));
+        Notification userNotification = new Notification(user, "Risk Identification Form (ID: " + reportId + ") requires revision by admin.", LocalDateTime.now());
+        notificationRepository.save(userNotification);
+
+        // Create notification for the admin
+        String adminEmail = getCurrentUserEmail();
+        User admin = userRepository.findByEmail(adminEmail).orElseThrow(() -> new RuntimeException("Admin not found"));
+        Notification adminNotification = new Notification(admin, "You have requested a revision for Risk Identification Form (ID: " + reportId + ") as an admin.", LocalDateTime.now());
+        notificationRepository.save(adminNotification);
+    }
+
+    private String getCurrentUserEmail() {
+        // Logic to get the current user's email (either approver or admin)
         UserDetails userDetails = (UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return userDetails.getUsername();
     }
