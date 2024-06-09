@@ -51,29 +51,6 @@ public class ReportService {
     private EmailService emailService;
 
     @Transactional
-    public void saveRiskFormDataList(List<RiskFormData> formDataList) {
-        if (!formDataList.isEmpty()) {
-            String email = SecurityContextHolder.getContext().getAuthentication().getName();
-            User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("User not found"));
-
-            Report report = new Report();
-            report.setUser(user);
-            reportRepository.save(report);
-
-            for (RiskFormData formData : formDataList) {
-                formData.setReport(report);
-
-                formData.getOpportunities().forEach(opportunity -> opportunity.setRiskFormData(formData));
-                formData.getActionPlans().forEach(actionPlan -> actionPlan.setRiskFormData(formData));
-                formData.getRiskParticulars().forEach(riskParticular -> riskParticular.setRiskFormData(formData));
-                formData.convertNamesToResponsiblePersons();
-
-                riskFormRepository.save(formData);
-            }
-        }
-    }
-
-    @Transactional
     public void updateProofAndNotes(Long reportId, List<MultipartFile> pdfProofs, List<String> notes) throws IOException {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
 
