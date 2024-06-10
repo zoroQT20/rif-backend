@@ -238,4 +238,40 @@ public class RiskFormData {
             .map(name -> new ResponsiblePerson(name, this))
             .collect(Collectors.toSet());
     }
+
+
+public void updateFields(RiskFormData newData) {
+    this.sdaNumber = newData.getSdaNumber();
+    this.uploadRIF = newData.getUploadRIF();
+    this.issueParticulars = newData.getIssueParticulars();
+    this.issueType = newData.getIssueType();
+    this.riskSEV = newData.getRiskSEV();
+    this.riskPROB = newData.getRiskPROB();
+    this.riskLevel = newData.getRiskLevel();
+    this.riskType = newData.getRiskType();
+    this.date = newData.getDate();
+    this.riskRating = newData.getRiskRating();
+    this.status = newData.getStatus();
+    this.submissionDate = newData.getSubmissionDate();
+    this.pdfProof = newData.getPdfProof();
+    this.notes = newData.getNotes();
+
+    // Update opportunities
+    this.opportunities.clear();
+    this.opportunities.addAll(newData.getOpportunities());
+
+    // Update action plans
+    this.actionPlans.clear();
+    this.actionPlans.addAll(newData.getActionPlans());
+
+    // Update risk particulars
+    this.riskParticulars.clear();
+    this.riskParticulars.addAll(newData.getRiskParticulars());
+
+    // Update responsible persons
+    this.responsiblePersons.clear();
+    this.responsiblePersons.addAll(newData.getResponsiblePersons());
+}
+
+
 }

@@ -18,6 +18,8 @@ public class RiskFormController {
 
     @Autowired
     private ReportRepository reportRepository;
+    @Autowired
+    private RiskFormRepository riskFormRepository;
 
     @PostMapping("/submit")
     public ResponseEntity<?> submitRiskForm(@RequestBody List<RiskFormData> formDataList) {
@@ -82,7 +84,7 @@ public ResponseEntity<?> getReportById(@PathVariable Long id) {
         List<PrerequisiteDataDTO> data = riskFormService.getAllRiskFormData();
         return ResponseEntity.ok(data);
     }
-  @PostMapping("/updateRiskFormData")
+@PostMapping("/updateRiskFormData")
 public ResponseEntity<?> updateRiskFormData(@RequestParam Long reportId, @RequestBody List<RiskFormData> formDataList) {
     try {
         Optional<Report> existingReport = reportRepository.findById(reportId);
@@ -90,14 +92,38 @@ public ResponseEntity<?> updateRiskFormData(@RequestParam Long reportId, @Reques
             return ResponseEntity.badRequest().body("Report not found with ID: " + reportId);
         }
 
-        formDataList.forEach(formData -> formData.setReport(existingReport.get()));
-        riskFormService.saveRiskFormDataList(formDataList);
+        Report report = existingReport.get();
+        List<RiskFormData> existingRiskFormData = report.getRiskFormData();
+
+        for (RiskFormData newData : formDataList) {
+            if (newData.getId() != null) {
+                Optional<RiskFormData> existingData = existingRiskFormData.stream()
+                        .filter(data -> data.getId().equals(newData.getId()))
+                        .findFirst();
+
+                if (existingData.isPresent()) {
+                    RiskFormData dataToUpdate = existingData.get();
+                    dataToUpdate.updateFields(newData);
+                    riskFormRepository.save(dataToUpdate);
+                } else {
+                    newData.setReport(report);
+                    riskFormRepository.save(newData);
+                }
+            } else {
+                newData.setReport(report);
+                riskFormRepository.save(newData);
+            }
+        }
+
+        existingRiskFormData.stream()
+            .filter(existingData -> formDataList.stream().noneMatch(newData -> newData.getId().equals(existingData.getId())))
+            .forEach(removedData -> riskFormRepository.delete(removedData));
+
         return ResponseEntity.ok("Risk form data updated successfully!");
     } catch (Exception e) {
         e.printStackTrace();
         return ResponseEntity.badRequest().body("Failed to update risk form data: " + e.getMessage());
     }
 }
-
 
 }
