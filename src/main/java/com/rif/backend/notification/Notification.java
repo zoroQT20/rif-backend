@@ -19,6 +19,9 @@ public class Notification {
     private String message;
     private LocalDateTime timestamp;
 
+    @Column(name = "is_read", nullable = false, columnDefinition = "TINYINT(1) DEFAULT 0")
+    private boolean isRead = false;  // Initialize as false
+
     public Notification() {
     }
 
@@ -26,6 +29,7 @@ public class Notification {
         this.user = user;
         this.message = message;
         this.timestamp = timestamp;
+        this.isRead = false;  // Initialize as unread
     }
 
     // Getters and Setters
@@ -59,5 +63,13 @@ public class Notification {
 
     public void setTimestamp(LocalDateTime timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean isRead) {
+        this.isRead = isRead;
     }
 }
