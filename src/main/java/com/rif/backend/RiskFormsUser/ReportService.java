@@ -129,6 +129,7 @@ public class ReportService {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
         report.setStatus(Report.ReportStatus.APPROVER_FOR_REVISION);
         report.setApproverComment(comment);
+        report.setApproverApproveDate(LocalDate.now());  // Set the date here
         reportRepository.save(report);
 
         // Send revision email
@@ -162,6 +163,7 @@ public class ReportService {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
         report.setStatus(Report.ReportStatus.ADMIN_FOR_REVISION);
         report.setAdminComment(comment);
+        report.setApproverApproveDate(LocalDate.now());  // Set the date here
         reportRepository.save(report);
 
         // Send revision email and notifications

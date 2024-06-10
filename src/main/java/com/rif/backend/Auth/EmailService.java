@@ -2,7 +2,6 @@ package com.rif.backend.Auth;
 
 import com.rif.backend.notification.Notification;
 import com.rif.backend.notification.NotificationRepository;
-import com.rif.backend.Auth.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -76,15 +75,15 @@ public class EmailService {
         Notification userNotification = new Notification(user, "Password reset email sent.", LocalDateTime.now());
         notificationRepository.save(userNotification);
 
-        // Create notification for the approver
-        String approverEmail = getCurrentUserEmail();
-        User approver = userRepository.findByEmail(approverEmail).orElseThrow(() -> new RuntimeException("Approver not found"));
-        Notification approverNotification = new Notification(approver, "Password reset email sent to user " + user.getEmail(), LocalDateTime.now());
-        notificationRepository.save(approverNotification);
+        // Create notification for the admin
+        String adminEmail = getCurrentUserEmail();
+        User admin = userRepository.findByEmail(adminEmail).orElseThrow(() -> new RuntimeException("Admin not found"));
+        Notification adminNotification = new Notification(admin, "Password reset email sent to user " + user.getEmail(), LocalDateTime.now());
+        notificationRepository.save(adminNotification);
     }
 
     public void sendRevisionEmail(String to, Long reportId, String comment, LocalDate submissionDate) {
-        String formattedDate = submissionDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String formattedDate = submissionDate != null ? submissionDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "unknown date";
         String subject = "YellowAlert - Risk Identification Form Revision Required";
         String text = "Dear User,\n\n" +
                       "Your Risk Identification Form (ID: " + reportId + ") submitted on " + formattedDate + " has been reviewed and requires revision. \n\n" +
@@ -171,7 +170,7 @@ public class EmailService {
     }
 
     public void sendAdminRevisionEmail(String to, Long reportId, String comment, LocalDate submissionDate) {
-        String formattedDate = submissionDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        String formattedDate = submissionDate != null ? submissionDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "unknown date";
         String subject = "YellowAlert - Risk Identification Form Revision Required";
         String text = "Dear User,\n\n" +
                       "Your Risk Identification Form (ID: " + reportId + ") submitted on " + formattedDate + " has been reviewed and requires revision. \n\n" +
