@@ -171,4 +171,11 @@ public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVari
         response.put("message", "Report marked for revision by admin with comment");
         return ResponseEntity.ok(response);
     }
+@PostMapping("/duplicate/{reportId}")
+public ResponseEntity<ReportDTO> duplicateReport(@PathVariable Long reportId) {
+    Report duplicatedReport = reportService.duplicateReport(reportId);
+    ReportDTO reportDTO = new ReportDTO(duplicatedReport);
+    return ResponseEntity.ok(reportDTO);
+}
+
 }

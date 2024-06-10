@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ReportService {
@@ -189,4 +190,71 @@ public class ReportService {
                 approver.getUser().getLastname()
         );
     }
+ @Transactional
+public Report duplicateReport(Long reportId) {
+    Report originalReport = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
+    Report newReport = new Report();
+
+    // Set fields for the new report
+    newReport.setUser(originalReport.getUser());
+    newReport.setStatus(Report.ReportStatus.APPROVER_PENDING); // Set status to APPROVER_PENDING
+    newReport.setApproverComment(null); // Clear approver comment
+    newReport.setAdminComment(null); // Clear admin comment
+    newReport.setApproverApproveDate(null); // Clear approver approve date
+
+    reportRepository.save(newReport);
+
+    for (RiskFormData originalData : originalReport.getRiskFormData()) {
+        RiskFormData newData = new RiskFormData();
+        newData.setSdaNumber(originalData.getSdaNumber());
+        newData.setUploadRIF(originalData.getUploadRIF());
+        newData.setIssueParticulars(originalData.getIssueParticulars());
+        newData.setIssueType(originalData.getIssueType());
+        newData.setRiskSEV(originalData.getRiskSEV());
+        newData.setRiskPROB(originalData.getRiskPROB());
+        newData.setRiskLevel(originalData.getRiskLevel());
+        newData.setRiskType(originalData.getRiskType());
+        newData.setDate(originalData.getDate());
+        newData.setRiskRating(originalData.getRiskRating());
+        newData.setStatus(originalData.getStatus());
+        newData.setSubmissionDate(originalData.getSubmissionDate());
+        newData.setPdfProof(null); // Clear PDF proof
+        newData.setNotes(null); // Clear notes
+        newData.setReport(newReport);
+
+        newData.setOpportunities(originalData.getOpportunities().stream().map(o -> {
+            Opportunity newOpportunity = new Opportunity();
+            newOpportunity.setDescription(o.getDescription());
+            newOpportunity.setRiskFormData(newData);
+            return newOpportunity;
+        }).collect(Collectors.toSet()));
+
+        newData.setActionPlans(originalData.getActionPlans().stream().map(ap -> {
+            ActionPlan newActionPlan = new ActionPlan();
+            newActionPlan.setDescription(ap.getDescription());
+            newActionPlan.setRiskFormData(newData);
+            return newActionPlan;
+        }).collect(Collectors.toSet()));
+
+        newData.setRiskParticulars(originalData.getRiskParticulars().stream().map(rp -> {
+            RiskParticular newRiskParticular = new RiskParticular();
+            newRiskParticular.setDescription(rp.getDescription());
+            newRiskParticular.setRiskFormData(newData);
+            return newRiskParticular;
+        }).collect(Collectors.toSet()));
+
+        newData.setResponsiblePersons(originalData.getResponsiblePersons().stream().map(rp -> {
+            ResponsiblePerson newResponsiblePerson = new ResponsiblePerson();
+            newResponsiblePerson.setName(rp.getName());
+            newResponsiblePerson.setRiskFormData(newData);
+            return newResponsiblePerson;
+        }).collect(Collectors.toSet()));
+
+        riskFormRepository.save(newData);
+    }
+
+    return newReport;
+}
+
+
 }
