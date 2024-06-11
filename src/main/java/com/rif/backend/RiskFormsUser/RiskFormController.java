@@ -93,6 +93,11 @@ public ResponseEntity<?> updateRiskFormData(@RequestParam Long reportId, @Reques
         }
 
         Report report = existingReport.get();
+        // Set the report status to APPROVER_PENDING
+        report.setStatus(Report.ReportStatus.APPROVER_PENDING);
+        reportRepository.save(report); // Save the updated report with the new status
+        System.out.println("Report status reset to APPROVER_PENDING");
+
         List<RiskFormData> existingRiskFormData = report.getRiskFormData();
 
         for (RiskFormData newData : formDataList) {
@@ -125,5 +130,6 @@ public ResponseEntity<?> updateRiskFormData(@RequestParam Long reportId, @Reques
         return ResponseEntity.badRequest().body("Failed to update risk form data: " + e.getMessage());
     }
 }
+
 
 }

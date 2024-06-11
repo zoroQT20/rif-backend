@@ -37,6 +37,7 @@ public void saveRiskFormDataList(List<RiskFormData> formDataList) {
                         ? reportRepository.findById(formDataList.get(0).getReport().getId()).orElse(new Report())
                         : new Report();
         report.setUser(user);
+        report.setStatus(Report.ReportStatus.APPROVER_PENDING); // Reset status to APPROVER_PENDING
         reportRepository.save(report);
 
         for (RiskFormData formData : formDataList) {
@@ -51,6 +52,7 @@ public void saveRiskFormDataList(List<RiskFormData> formDataList) {
         }
     }
 }
+
 
 
     public List<RiskFormDataGroupedDTO> getRiskFormDataGroupedBySdaNumber() {
