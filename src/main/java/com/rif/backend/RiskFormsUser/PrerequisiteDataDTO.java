@@ -1,23 +1,31 @@
 package com.rif.backend.RiskFormsUser;
 
 public class PrerequisiteDataDTO {
+    private String unit;
     private String unitType;
     private Integer sdaNumber;
     private String riskLevel;
     private String submissionDate;
-    private String riskType; // Added field for Initial and Residual risks
+    private String riskType;
 
-
-    public PrerequisiteDataDTO(String unitType, Integer sdaNumber, String riskLevel, String submissionDate,String riskType) {
+    public PrerequisiteDataDTO(String unit, String unitType, Integer sdaNumber, String riskLevel, String submissionDate, String riskType) {
+        this.unit = unit;
         this.unitType = unitType;
         this.sdaNumber = sdaNumber;
         this.riskLevel = riskLevel;
         this.submissionDate = submissionDate;
         this.riskType = riskType;
-
     }
 
     // Getters and Setters
+    public String getUnit() {
+        return unit;
+    }
+
+    public void setUnit(String unit) {
+        this.unit = unit;
+    }
+
     public String getUnitType() {
         return unitType;
     }
@@ -49,7 +57,8 @@ public class PrerequisiteDataDTO {
     public void setSubmissionDate(String submissionDate) {
         this.submissionDate = submissionDate;
     }
-     public String getRiskType() {
+
+    public String getRiskType() {
         return riskType;
     }
 

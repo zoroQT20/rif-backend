@@ -68,24 +68,27 @@ public void saveRiskFormDataList(List<RiskFormData> formDataList) {
         )).collect(Collectors.toList());
     }
 
-    @Transactional(readOnly = true)
-    public List<RiskFormDataCustomDTO> getRiskFormDataBySdaNumber(Integer sdaNumber) {
-        List<Object[]> results = riskFormRepository.findRiskFormDataBySdaNumber(sdaNumber);
-        return results.stream()
-                .map(result -> new RiskFormDataCustomDTO((String) result[0], (String) result[1], (String) result[2], (String) result[3]))
-                .collect(Collectors.toList());
-    }
+  @Transactional(readOnly = true)
+public List<RiskFormDataCustomDTO> getRiskFormDataBySdaNumber(Integer sdaNumber) {
+    List<Object[]> results = riskFormRepository.findRiskFormDataBySdaNumber(sdaNumber);
+    return results.stream()
+            .map(result -> new RiskFormDataCustomDTO((String) result[0], (String) result[1], (String) result[2], (String) result[3], (String) result[4]))
+            .collect(Collectors.toList());
+}
 
-    @Transactional(readOnly = true)
-    public List<PrerequisiteDataDTO> getAllRiskFormData() {
-        List<Object[]> results = riskFormRepository.findAllRiskFormData();
-        return results.stream()
-                .map(result -> new PrerequisiteDataDTO((String) result[0], (Integer) result[1], (String) result[2], (String) result[3], (String) result[4]))
-                .collect(Collectors.toList());
-    }
+@Transactional(readOnly = true)
+public List<PrerequisiteDataDTO> getAllRiskFormData() {
+    List<Object[]> results = riskFormRepository.findAllRiskFormData();
+    return results.stream()
+            .map(result -> new PrerequisiteDataDTO((String) result[0], (String) result[1], (Integer) result[2], (String) result[3], (String) result[4], (String) result[5]))
+            .collect(Collectors.toList());
+}
+
+
 
     @Transactional(readOnly = true)
     public Optional<Report> findById(Long reportId) {
         return reportRepository.findById(reportId);
     }
+    
 }

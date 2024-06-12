@@ -73,17 +73,18 @@ public ResponseEntity<?> getReportById(@PathVariable Long id) {
     }
 
 
-    @GetMapping("/dataBySdaNumber/{sdaNumber}")
-    public ResponseEntity<List<RiskFormDataCustomDTO>> getRiskFormDataBySdaNumber(@PathVariable Integer sdaNumber) {
-        List<RiskFormDataCustomDTO> data = riskFormService.getRiskFormDataBySdaNumber(sdaNumber);
-        return ResponseEntity.ok(data);
-    }
+  @GetMapping("/dataBySdaNumber/{sdaNumber}")
+public ResponseEntity<List<RiskFormDataCustomDTO>> getRiskFormDataBySdaNumber(@PathVariable Integer sdaNumber) {
+    List<RiskFormDataCustomDTO> data = riskFormService.getRiskFormDataBySdaNumber(sdaNumber);
+    return ResponseEntity.ok(data);
+}
 
-    @GetMapping("/allData")
-    public ResponseEntity<List<PrerequisiteDataDTO>> getAllRiskFormData() {
-        List<PrerequisiteDataDTO> data = riskFormService.getAllRiskFormData();
-        return ResponseEntity.ok(data);
-    }
+ @GetMapping("/allData")
+public ResponseEntity<List<PrerequisiteDataDTO>> getAllRiskFormData() {
+    List<PrerequisiteDataDTO> data = riskFormService.getAllRiskFormData();
+    return ResponseEntity.ok(data);
+}
+
 @PostMapping("/updateRiskFormData")
 public ResponseEntity<?> updateRiskFormData(@RequestParam Long reportId, @RequestBody List<RiskFormData> formDataList) {
     try {
