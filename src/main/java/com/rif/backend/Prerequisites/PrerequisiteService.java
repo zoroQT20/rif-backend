@@ -33,7 +33,7 @@ public class PrerequisiteService {
         return repository.save(prerequisite);
     }
 
-@Transactional
+    @Transactional
     public Prerequisite updatePrerequisite(Prerequisite existing, Prerequisite newPrerequisite) {
         boolean unitChanged = !existing.getUnit().equals(newPrerequisite.getUnit());
 
@@ -110,5 +110,13 @@ public class PrerequisiteService {
 
     public boolean unitExists(String unit) {
         return repository.existsByUnit(unit);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isPrerequisiteComplete(String email) {
+        Optional<Prerequisite> prerequisite = repository.findByUserEmail(email);
+        return prerequisite.isPresent() && !prerequisite.get().getUnit().isEmpty()
+                && !prerequisite.get().getInternalStakeholders().isEmpty()
+                && !prerequisite.get().getExternalStakeholders().isEmpty();
     }
 }

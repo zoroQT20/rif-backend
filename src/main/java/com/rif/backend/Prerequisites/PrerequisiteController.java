@@ -74,4 +74,10 @@ public class PrerequisiteController {
         boolean exists = service.unitExists(unit);
         return ResponseEntity.ok(exists);
     }
+
+    @GetMapping("/status")
+    public ResponseEntity<Boolean> isPrerequisiteComplete(Principal principal) {
+        boolean isComplete = service.isPrerequisiteComplete(principal.getName());
+        return ResponseEntity.ok(isComplete);
+    }
 }

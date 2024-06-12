@@ -52,4 +52,10 @@ public class ESignatureController {
                 .contentType(MediaType.IMAGE_JPEG)
                 .body(eSignature.getESignaturePhoto());
     }
+
+    @GetMapping("/status")
+    public ResponseEntity<Boolean> isEsignatureComplete(Principal principal) {
+        boolean isComplete = service.isEsignatureComplete(principal.getName());
+        return ResponseEntity.ok(isComplete);
+    }
 }

@@ -47,8 +47,15 @@ public class ESignatureService {
     public ESignature findById(Long id) {
         return repository.findById(id).orElse(null);
     }
-      @Transactional(readOnly = true)
+
+    @Transactional(readOnly = true)
     public Optional<ESignature> getESignatureByUserId(Long userId) {
         return repository.findByUserId(userId);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean isEsignatureComplete(String email) {
+        Optional<ESignature> eSignature = repository.findByUserEmail(email);
+        return eSignature.isPresent() && eSignature.get().getESignaturePhoto() != null;
     }
 }
