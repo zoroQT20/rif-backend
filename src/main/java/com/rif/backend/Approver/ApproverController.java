@@ -19,14 +19,14 @@ public class ApproverController {
     public ResponseEntity<Approver> uploadApprover(
             @RequestParam("professionalTitle") String professionalTitle,
             @RequestParam("postNominalTitle") String postNominalTitle,
-            @RequestParam("approverUnit") String approverUnit,  // Updated line
+            @RequestParam("approverUnit") String approverUnit,
             @RequestParam(value = "file", required = false) MultipartFile file,
             Principal principal) throws Exception {
 
         Approver approver = new Approver();
         approver.setProfessionalTitle(professionalTitle);
         approver.setPostNominalTitle(postNominalTitle);
-        approver.setApproverUnit(approverUnit);  // Updated line
+        approver.setApproverUnit(approverUnit);
         if (file != null) {
             approver.setApproverPhoto(file.getBytes());
         }
@@ -62,5 +62,13 @@ public class ApproverController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(approver);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<Boolean> checkApproverDetailsStatus(Principal principal) {
+        Approver approver = service.getApproverByEmail(principal.getName());
+        boolean isComplete = approver != null && approver.getProfessionalTitle() != null
+                && approver.getPostNominalTitle() != null && approver.getApproverUnit() != null;
+        return ResponseEntity.ok(isComplete);
     }
 }
