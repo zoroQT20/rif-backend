@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.rif.backend.Auth.User;
 import com.rif.backend.Security.UserDetailsImpl;
+
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,7 +23,7 @@ public class JwtUtils {
     @Value("${rif.app.jwtPasswordResetExpirationMs}")
     private int jwtPasswordResetExpirationMs;
 
-    public String generateJwtToken(Authentication authentication) {
+    public String generateJwtToken(Authentication authentication, boolean isNewUser) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         List<String> roles = userPrincipal.getAuthorities().stream()
@@ -34,6 +35,7 @@ public class JwtUtils {
                 .claim("roles", roles)
                 .claim("firstname", userPrincipal.getFirstname())
                 .claim("lastname", userPrincipal.getLastname())
+                .claim("isNewUser", isNewUser) // Add the isNewUser claim
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

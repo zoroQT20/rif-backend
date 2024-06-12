@@ -18,7 +18,6 @@ import com.rif.backend.Security.UserDetailsImpl;
 import com.rif.backend.Security.jwt.JwtUtils;
 
 import javax.validation.Valid;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -74,7 +73,8 @@ public class AuthController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
             SecurityContextHolder.getContext().setAuthentication(authentication);
-            String jwt = jwtUtils.generateJwtToken(authentication);
+            boolean isNewUser = user.isNewUser(); // Assuming user has this field
+            String jwt = jwtUtils.generateJwtToken(authentication, isNewUser);
 
             UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
             List<String> roles = userDetails.getAuthorities().stream()
@@ -105,6 +105,8 @@ public class AuthController {
                              signUpRequest.getFirstname(),
                              signUpRequest.getLastname(),
                              encoder.encode(signUpRequest.getPassword()));
+
+        user.setNewUser(true); // Set the isNewUser flag
 
         Set<String> strRoles = signUpRequest.getRole();
         Set<Role> roles = new HashSet<>();

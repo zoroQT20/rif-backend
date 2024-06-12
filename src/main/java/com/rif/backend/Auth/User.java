@@ -34,6 +34,8 @@ public class User {
 
     private boolean active = true; // Add this field
 
+    private boolean isNewUser = true; // Add this field
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "user_roles",
                joinColumns = @JoinColumn(name = "user_id"),
@@ -54,6 +56,7 @@ public class User {
         this.firstname = firstname;
         this.lastname = lastname;
         this.password = password;
+        this.isNewUser = true; // Set new user as true initially
     }
 
     // Getters and setters
@@ -103,6 +106,14 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public boolean isNewUser() {
+        return isNewUser;
+    }
+
+    public void setNewUser(boolean isNewUser) {
+        this.isNewUser = isNewUser;
     }
 
     public Set<Role> getRoles() {
