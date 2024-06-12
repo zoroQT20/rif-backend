@@ -62,12 +62,12 @@ public class ReportController {
         return ResponseEntity.ok(count);
     }
 
-@GetMapping("/all-reports")
-public ResponseEntity<List<ReportDTO>> getAllReports() {
-    List<Report> reports = reportRepository.findAllApprovedReports();
-    List<ReportDTO> reportDTOs = reports.stream().map(ReportDTO::new).collect(Collectors.toList());
-    return ResponseEntity.ok(reportDTOs);
-}
+    @GetMapping("/all-reports")
+    public ResponseEntity<List<ReportDTO>> getAllReports() {
+        List<Report> reports = reportRepository.findAllApprovedReports();
+        List<ReportDTO> reportDTOs = reports.stream().map(ReportDTO::new).collect(Collectors.toList());
+        return ResponseEntity.ok(reportDTOs);
+    }
 
     @GetMapping("/unit/{unit}/email/{email}")
     public ResponseEntity<List<ReportDTO>> getReportsByUserUnitOrApproverUnit(@PathVariable String unit, @PathVariable String email) {
@@ -93,7 +93,7 @@ public ResponseEntity<List<ReportDTO>> getAllReports() {
         return ResponseEntity.ok(reportDetails);
     }
 
-   @PostMapping("/update")
+    @PostMapping("/update")
     public ResponseEntity<?> updateProofAndNotes(
         @RequestParam("reportId") Long reportId,
         @RequestParam(value = "pdfProofs", required = false) List<MultipartFile> pdfProofs,
@@ -108,19 +108,19 @@ public ResponseEntity<List<ReportDTO>> getAllReports() {
     }
 
     @GetMapping("/report/{reportId}/pdf/{riskFormDataId}")
-public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVariable Long riskFormDataId) {
-    Optional<byte[]> pdfProof = reportService.getPdfProof(reportId, riskFormDataId);
-    if (pdfProof.isPresent()) {
-        return ResponseEntity.ok()
-            .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"proof.pdf\"")
-            .contentType(MediaType.APPLICATION_PDF)
-            .body(pdfProof.get());
-    } else {
-        return ResponseEntity.notFound().build();
+    public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVariable Long riskFormDataId) {
+        Optional<byte[]> pdfProof = reportService.getPdfProof(reportId, riskFormDataId);
+        if (pdfProof.isPresent()) {
+            return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"proof.pdf\"")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdfProof.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-}
 
-  @PostMapping("/approve")
+    @PostMapping("/approve")
     public ResponseEntity<Map<String, String>> approveReport(@RequestBody Map<String, Long> request) {
         Long reportId = request.get("reportId");
         reportService.approveReport(reportId);
@@ -139,7 +139,7 @@ public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVari
         return ResponseEntity.ok(response);
     }
     
-  @PostMapping("/verify")
+    @PostMapping("/verify")
     public ResponseEntity<Map<String, String>> verifyReport(@RequestBody Map<String, Long> request) {
         Long reportId = request.get("reportId");
         reportService.verifyReport(reportId);
@@ -147,7 +147,8 @@ public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVari
         response.put("message", "Report verified successfully");
         return ResponseEntity.ok(response);
     }
-      @GetMapping("/approverDetails/{reportId}")
+
+    @GetMapping("/approverDetails/{reportId}")
     public ResponseEntity<ApproverDetailsDTO> getApproverDetails(@PathVariable Long reportId) {
         ApproverDetailsDTO approverDetails = reportService.getApproverDetails(reportId);
         return ResponseEntity.ok(approverDetails);
@@ -171,11 +172,11 @@ public ResponseEntity<byte[]> getPdfProof(@PathVariable Long reportId, @PathVari
         response.put("message", "Report marked for revision by admin with comment");
         return ResponseEntity.ok(response);
     }
-@PostMapping("/duplicate/{reportId}")
-public ResponseEntity<ReportDTO> duplicateReport(@PathVariable Long reportId) {
-    Report duplicatedReport = reportService.duplicateReport(reportId);
-    ReportDTO reportDTO = new ReportDTO(duplicatedReport);
-    return ResponseEntity.ok(reportDTO);
-}
 
+    @PostMapping("/duplicate/{reportId}")
+    public ResponseEntity<ReportDTO> duplicateReport(@PathVariable Long reportId) {
+        Report duplicatedReport = reportService.duplicateReport(reportId);
+        ReportDTO reportDTO = new ReportDTO(duplicatedReport);
+        return ResponseEntity.ok(reportDTO);
+    }
 }

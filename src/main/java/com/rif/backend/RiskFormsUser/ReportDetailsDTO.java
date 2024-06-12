@@ -12,6 +12,7 @@ public class ReportDetailsDTO {
     private String esignatureProfessionalTitle;
     private String esignaturePostNominalTitle;
     private byte[] esignaturePhoto;
+    private String unitType; // New field for unit type
 
     public ReportDetailsDTO(Report report, Prerequisite prerequisite, User user, ESignature esignature) {
         this.report = new ReportDTO(report);
@@ -21,6 +22,7 @@ public class ReportDetailsDTO {
         this.esignatureProfessionalTitle = esignature.getProfessionalTitle();
         this.esignaturePostNominalTitle = esignature.getPostNominalTitle();
         this.esignaturePhoto = esignature.getESignaturePhoto();
+        this.unitType = prerequisite.getUnitType(); // Set the unit type
     }
 
     // Getters and Setters
@@ -78,5 +80,13 @@ public class ReportDetailsDTO {
 
     public void setEsignaturePhoto(byte[] esignaturePhoto) {
         this.esignaturePhoto = esignaturePhoto;
+    }
+
+    public String getUnitType() {
+        return unitType;
+    }
+
+    public void setUnitType(String unitType) {
+        this.unitType = unitType;
     }
 }
