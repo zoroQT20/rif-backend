@@ -98,4 +98,11 @@ public List<PrerequisiteDataDTO> getAllRiskFormData() {
                 .collect(Collectors.toList());
     }
 
+ @Transactional(readOnly = true)
+    public List<RiskFormDataCustomDTO> getRiskFormDataByApproverUnit(String email, Integer sdaNumber) {
+        List<Object[]> results = riskFormRepository.findRiskFormDataByApproverUnit(email, sdaNumber);
+        return results.stream()
+                .map(result -> new RiskFormDataCustomDTO((String) result[0], (String) result[1], (String) result[2], (String) result[3], (String) result[4]))
+                .collect(Collectors.toList());
+    }
 }
