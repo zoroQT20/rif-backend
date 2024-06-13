@@ -149,5 +149,4 @@ private String getCurrentUserEmail() {
     }
     return null;
 }
-
 }

@@ -90,7 +90,7 @@ public List<PrerequisiteDataDTO> getAllRiskFormData() {
     public Optional<Report> findById(Long reportId) {
         return reportRepository.findById(reportId);
     }
-    @Transactional(readOnly = true)
+@Transactional(readOnly = true)
 public List<RiskFormDataCustomDTO> getRiskFormDataByUserEmail(String email) {
     List<Object[]> results = riskFormRepository.findRiskFormDataByUserEmail(email);
     return results.stream()

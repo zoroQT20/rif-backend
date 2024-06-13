@@ -43,4 +43,5 @@ List<Object[]> findAllRiskFormData();
                "WHERE u.email = :email", nativeQuery = true)
 List<Object[]> findRiskFormDataByUserEmail(String email);
 
+
 }
