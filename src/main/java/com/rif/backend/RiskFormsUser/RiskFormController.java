@@ -156,5 +156,11 @@ public ResponseEntity<?> updateRiskFormData(@RequestParam Long reportId, @Reques
         List<RiskFormDataCustomDTO> data = riskFormService.getRiskFormDataByApproverUnit(userEmail, sdaNumber);
         return ResponseEntity.ok(data);
     }
+@GetMapping("/dataByUserUnitForSDAComparison")
+public ResponseEntity<List<PrerequisiteDataDTO>> getRiskFormDataByUserUnitForSDAComparison() {
+    String userEmail = getCurrentUserEmail();
+    List<PrerequisiteDataDTO> data = riskFormService.getRiskFormDataByUserEmailForSDAComparison(userEmail);
+    return ResponseEntity.ok(data);
+}
 
 }
