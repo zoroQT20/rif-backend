@@ -90,12 +90,12 @@ public List<PrerequisiteDataDTO> getAllRiskFormData() {
     public Optional<Report> findById(Long reportId) {
         return reportRepository.findById(reportId);
     }
-@Transactional(readOnly = true)
-public List<RiskFormDataCustomDTO> getRiskFormDataByUserEmail(String email) {
-    List<Object[]> results = riskFormRepository.findRiskFormDataByUserEmail(email);
-    return results.stream()
-            .map(result -> new RiskFormDataCustomDTO((String) result[0], (String) result[1], (String) result[2], (String) result[3], (String) result[4]))
-            .collect(Collectors.toList());
-}
+  @Transactional(readOnly = true)
+    public List<RiskFormDataCustomDTO> getRiskFormDataByUserEmailAndSda(String email, Integer sdaNumber) {
+        List<Object[]> results = riskFormRepository.findRiskFormDataByUserEmailAndSda(email, sdaNumber);
+        return results.stream()
+                .map(result -> new RiskFormDataCustomDTO((String) result[0], (String) result[1], (String) result[2], (String) result[3], (String) result[4]))
+                .collect(Collectors.toList());
+    }
 
 }
