@@ -163,4 +163,10 @@ public ResponseEntity<List<PrerequisiteDataDTO>> getRiskFormDataByUserUnitForSDA
     return ResponseEntity.ok(data);
 }
 
+@GetMapping("/dataForApproverUnit")
+public ResponseEntity<List<PrerequisiteDataDTO>> getRiskFormDataForApproverUnit() {
+    String userEmail = getCurrentUserEmail();
+    List<PrerequisiteDataDTO> data = riskFormService.getRiskFormDataForApproverUnit(userEmail);
+    return ResponseEntity.ok(data);
+}
 }

@@ -113,6 +113,13 @@ public List<PrerequisiteDataDTO> getRiskFormDataByUserEmailForSDAComparison(Stri
             .map(result -> new PrerequisiteDataDTO((String) result[0], (String) result[1], (Integer) result[2], (String) result[3], (String) result[4], (String) result[5]))
             .collect(Collectors.toList());
 }
+@Transactional(readOnly = true)
+public List<PrerequisiteDataDTO> getRiskFormDataForApproverUnit(String email) {
+    List<Object[]> results = riskFormRepository.findRiskFormDataForApproverUnit(email);
+    return results.stream()
+            .map(result -> new PrerequisiteDataDTO((String) result[0], (String) result[1], (Integer) result[2], (String) result[3], (String) result[4], (String) result[5]))
+            .collect(Collectors.toList());
+}
 
 
 }
