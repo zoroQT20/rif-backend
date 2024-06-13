@@ -113,7 +113,7 @@ public class EmailService {
 
     public void sendVerificationEmail(String to, Long reportId, LocalDate verificationDate) {
         String formattedDate = verificationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String subject = "Report Verification Notification";
+        String subject = "YellowAlert - Risk Identification Form Verification Notification";
         String text = "Dear User,\n\n" +
                       "We are pleased to inform you that your Risk Identification Form (ID: " + reportId + ") submitted on " + formattedDate + " has been verified by the Office of Planning and Quality Management (OPQM). \n\n" +
                       "If you have any questions, please do not hesitate to contact us.\n\n" +
@@ -143,7 +143,7 @@ public class EmailService {
 
     public void sendAdminVerificationEmail(String to, Long reportId, LocalDate verificationDate) {
         String formattedDate = verificationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
-        String subject = "YellowAlert - Report Verification Notification";
+        String subject = "YellowAlert - Risk Identification Form Verification Notification";
         String text = "Dear User,\n\n" +
                       "We are pleased to inform you that your Risk Identification Form (ID: " + reportId + ") submitted on " + formattedDate + " has been verified by the Office of Planning and Quality Management (OPQM). \n\n" +
                       "If you have any questions, please do not hesitate to contact us.\n\n" +
