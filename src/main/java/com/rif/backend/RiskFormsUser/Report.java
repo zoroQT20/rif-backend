@@ -41,10 +41,10 @@ public class Report {
 
     @Column(name = "approver_comment", length = 1000)
     private String approverComment;
-    
+
     @Column(name = "admin_comment", length = 1000)
     private String adminComment;
-    
+
     @Column(name = "approver_approve_date")
     private LocalDate approverApproveDate;
 

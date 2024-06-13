@@ -17,6 +17,7 @@ import com.rif.backend.Prerequisites.Prerequisite;
 import com.rif.backend.Prerequisites.PrerequisiteService;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,10 @@ public class ReportController {
 
     @Autowired
     private ReportRepository reportRepository;
+
+     @Autowired
+    private RevisionCommentHistoryService revisionCommentHistoryService;
+
 
     @Autowired
     private ESignatureService eSignatureService;
@@ -129,7 +134,7 @@ public class ReportController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/for-revision")
+       @PostMapping("/for-revision")
     public ResponseEntity<Map<String, String>> markReportForRevision(@RequestBody Map<String, Object> request) {
         Long reportId = ((Number) request.get("reportId")).longValue();
         String comment = (String) request.get("comment");
@@ -163,7 +168,7 @@ public class ReportController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/admin-for-revision")
+     @PostMapping("/admin-for-revision")
     public ResponseEntity<Map<String, String>> adminMarkReportForRevision(@RequestBody Map<String, Object> request) {
         Long reportId = ((Number) request.get("reportId")).longValue();
         String comment = (String) request.get("comment");
@@ -179,4 +184,22 @@ public class ReportController {
         ReportDTO reportDTO = new ReportDTO(duplicatedReport);
         return ResponseEntity.ok(reportDTO);
     }
+   @GetMapping("/revision-comments/{reportId}")
+    public ResponseEntity<List<RevisionCommentHistoryDTO>> getRevisionComments(@PathVariable Long reportId) {
+        List<RevisionCommentHistoryDTO> revisionComments = revisionCommentHistoryService.getRevisionCommentsByReportId(reportId);
+        return ResponseEntity.ok(revisionComments);
+    }
+       @GetMapping("/admin-comment/{reportId}")
+    public ResponseEntity<Map<String, String>> getAdminComment(@PathVariable Long reportId) {
+        Optional<Report> reportOpt = reportService.findById(reportId);
+        if (reportOpt.isPresent()) {
+            Report report = reportOpt.get();
+            Map<String, String> response = new HashMap<>();
+            response.put("adminComment", report.getAdminComment());
+            return ResponseEntity.ok(response);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Collections.singletonMap("error", "Report not found"));
+        }
+    }
+
 }

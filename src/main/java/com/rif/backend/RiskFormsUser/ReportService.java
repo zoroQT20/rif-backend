@@ -35,6 +35,8 @@ public class ReportService {
     private PrerequisiteService prerequisiteService;
     @Autowired
     private ESignatureService eSignatureService;
+      @Autowired
+    private RevisionCommentHistoryService revisionCommentHistoryService;
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -125,7 +127,7 @@ public class ReportService {
         emailService.sendApprovalEmail(report.getUser().getEmail(), report.getId(), report.getApproverApproveDate());
     }
 
-    @Transactional
+   @Transactional
     public void markReportForRevision(Long reportId, String comment) {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
         report.setStatus(Report.ReportStatus.APPROVER_FOR_REVISION);
@@ -159,13 +161,16 @@ public class ReportService {
         emailService.sendAdminVerificationEmail(report.getUser().getEmail(), report.getId(), LocalDate.now());
     }
 
-    @Transactional
+  @Transactional
     public void adminMarkReportForRevision(Long reportId, String comment) {
         Report report = reportRepository.findById(reportId).orElseThrow(() -> new RuntimeException("Report not found"));
         report.setStatus(Report.ReportStatus.ADMIN_FOR_REVISION);
-        report.setAdminComment(comment);
+        report.setAdminComment(comment); // Set the admin comment
         report.setApproverApproveDate(LocalDate.now());  // Set the date here
         reportRepository.save(report);
+
+        // Save revision comment history
+        revisionCommentHistoryService.addRevisionComment(report, comment);
 
         // Send revision email and notifications
         emailService.sendAdminRevisionEmail(report.getUser().getEmail(), report.getId(), comment, LocalDate.now());
