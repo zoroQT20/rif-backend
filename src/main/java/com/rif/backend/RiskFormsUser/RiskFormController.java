@@ -3,7 +3,10 @@ package com.rif.backend.RiskFormsUser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.Authentication;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -132,5 +135,19 @@ public ResponseEntity<?> updateRiskFormData(@RequestParam Long reportId, @Reques
     }
 }
 
+@GetMapping("/dataByUserUnit")
+public ResponseEntity<List<RiskFormDataCustomDTO>> getRiskFormDataByUserUnit() {
+    String userEmail = getCurrentUserEmail();
+    List<RiskFormDataCustomDTO> data = riskFormService.getRiskFormDataByUserEmail(userEmail);
+    return ResponseEntity.ok(data);
+}
+
+private String getCurrentUserEmail() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication != null && authentication.getPrincipal() instanceof UserDetails) {
+        return ((UserDetails) authentication.getPrincipal()).getUsername();
+    }
+    return null;
+}
 
 }
