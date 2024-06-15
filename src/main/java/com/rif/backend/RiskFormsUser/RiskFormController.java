@@ -135,12 +135,12 @@ public ResponseEntity<?> updateRiskFormData(@RequestParam Long reportId, @Reques
     }
 }
 
-   @GetMapping("/dataByUserUnit")
-    public ResponseEntity<List<RiskFormDataCustomDTO>> getRiskFormDataByUserUnit(@RequestParam(required = false) Integer sdaNumber) {
-        String userEmail = getCurrentUserEmail();
-        List<RiskFormDataCustomDTO> data = riskFormService.getRiskFormDataByUserEmailAndSda(userEmail, sdaNumber);
-        return ResponseEntity.ok(data);
-    }
+@GetMapping("/dataByUserUnit")
+public ResponseEntity<List<RiskFormDataCustomDTO>> getRiskFormDataByUserUnit(@RequestParam(required = false) Integer sdaNumber) {
+    String userEmail = getCurrentUserEmail();
+    List<RiskFormDataCustomDTO> data = riskFormService.getRiskFormDataByUserEmailAndSda(userEmail, sdaNumber);
+    return ResponseEntity.ok(data);
+}
 
     private String getCurrentUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();

@@ -40,14 +40,16 @@ List<Object[]> findRiskFormDataBySdaNumber(Integer sdaNumber);
                "WHERE r.status = 'ADMIN_VERIFIED'", nativeQuery = true)
 List<Object[]> findAllRiskFormData();
 
-  @Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType " +
-                   "FROM risk_forms rf " +
-                   "JOIN reports r ON rf.report_id = r.id " +
-                   "JOIN user u ON r.user_id = u.id " +
-                   "JOIN prerequisite p ON u.id = p.user_id " +
-                   "WHERE u.email = :email " +
-                   "AND (:sdaNumber IS NULL OR rf.sda_number = :sdaNumber)", nativeQuery = true)
-    List<Object[]> findRiskFormDataByUserEmailAndSda(@Param("email") String email, @Param("sdaNumber") Integer sdaNumber);
+@Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType, r.status as status " +
+               "FROM risk_forms rf " +
+               "JOIN reports r ON rf.report_id = r.id " +
+               "JOIN user u ON r.user_id = u.id " +
+               "JOIN prerequisite p ON u.id = p.user_id " +
+               "WHERE u.email = :email " +
+               "AND (:sdaNumber IS NULL OR rf.sda_number = :sdaNumber) " +
+               "AND r.status = 'ADMIN_VERIFIED'", nativeQuery = true)
+List<Object[]> findRiskFormDataByUserEmailAndSda(@Param("email") String email, @Param("sdaNumber") Integer sdaNumber);
+
 
 @Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType " +
                "FROM risk_forms rf " +
