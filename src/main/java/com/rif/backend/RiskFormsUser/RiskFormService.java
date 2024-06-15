@@ -112,13 +112,16 @@ public List<RiskFormDataCustomDTO> getRiskFormDataByApproverUnit(String email, I
 public List<PrerequisiteDataDTO> getRiskFormDataByUserEmailForSDAComparison(String email) {
     List<Object[]> results = riskFormRepository.findRiskFormDataByUserEmailForSDAComparison(email);
     return results.stream()
+            .filter(result -> "ADMIN_VERIFIED".equals(result[6])) // Assuming the status is the 7th field in the result array
             .map(result -> new PrerequisiteDataDTO((String) result[0], (String) result[1], (Integer) result[2], (String) result[3], (String) result[4], (String) result[5]))
             .collect(Collectors.toList());
 }
+
 @Transactional(readOnly = true)
 public List<PrerequisiteDataDTO> getRiskFormDataForApproverUnit(String email) {
     List<Object[]> results = riskFormRepository.findRiskFormDataForApproverUnit(email);
     return results.stream()
+            .filter(result -> "ADMIN_VERIFIED".equals(result[6])) // Assuming the status is the 7th field in the result array
             .map(result -> new PrerequisiteDataDTO((String) result[0], (String) result[1], (Integer) result[2], (String) result[3], (String) result[4], (String) result[5]))
             .collect(Collectors.toList());
 }

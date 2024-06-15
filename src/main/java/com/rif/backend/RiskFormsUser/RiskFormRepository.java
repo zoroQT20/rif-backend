@@ -62,20 +62,23 @@ List<Object[]> findRiskFormDataByUserEmailAndSda(@Param("email") String email, @
 List<Object[]> findRiskFormDataByApproverUnit(@Param("email") String email, @Param("sdaNumber") Integer sdaNumber);
 
    
-@Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.sda_number as sdaNumber, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType " +
+@Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.sda_number as sdaNumber, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType, r.status as status " +
                "FROM risk_forms rf " +
                "JOIN reports r ON rf.report_id = r.id " +
                "JOIN user u ON r.user_id = u.id " +
                "JOIN prerequisite p ON u.id = p.user_id " +
-               "WHERE u.email = :email", nativeQuery = true)
+               "WHERE u.email = :email " +
+               "AND r.status = 'ADMIN_VERIFIED'", nativeQuery = true)
 List<Object[]> findRiskFormDataByUserEmailForSDAComparison(@Param("email") String email);
 
-@Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.sda_number as sdaNumber, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType " +
+
+@Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.sda_number as sdaNumber, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType, r.status as status " +
                "FROM risk_forms rf " +
                "JOIN reports r ON rf.report_id = r.id " +
                "JOIN user u ON r.user_id = u.id " +
                "JOIN prerequisite p ON u.id = p.user_id " +
-               "WHERE p.unit = (SELECT a.approver_unit FROM approvers a JOIN user u2 ON a.user_id = u2.id WHERE u2.email = :email)", nativeQuery = true)
+               "WHERE p.unit = (SELECT a.approver_unit FROM approvers a JOIN user u2 ON a.user_id = u2.id WHERE u2.email = :email) " +
+               "AND r.status = 'ADMIN_VERIFIED'", nativeQuery = true)
 List<Object[]> findRiskFormDataForApproverUnit(@Param("email") String email);
 
 
