@@ -149,13 +149,14 @@ public ResponseEntity<?> updateRiskFormData(@RequestParam Long reportId, @Reques
         }
         return null;
     }
-    @GetMapping("/dataByApproverUnit")
-    public ResponseEntity<List<RiskFormDataCustomDTO>> getRiskFormDataByApproverUnit(
-            @RequestParam(required = false) Integer sdaNumber) {
-        String userEmail = getCurrentUserEmail();
-        List<RiskFormDataCustomDTO> data = riskFormService.getRiskFormDataByApproverUnit(userEmail, sdaNumber);
-        return ResponseEntity.ok(data);
-    }
+@GetMapping("/dataByApproverUnit")
+public ResponseEntity<List<RiskFormDataCustomDTO>> getRiskFormDataByApproverUnit(
+        @RequestParam(required = false) Integer sdaNumber) {
+    String userEmail = getCurrentUserEmail();
+    List<RiskFormDataCustomDTO> data = riskFormService.getRiskFormDataByApproverUnit(userEmail, sdaNumber);
+    return ResponseEntity.ok(data);
+}
+
 @GetMapping("/dataByUserUnitForSDAComparison")
 public ResponseEntity<List<PrerequisiteDataDTO>> getRiskFormDataByUserUnitForSDAComparison() {
     String userEmail = getCurrentUserEmail();
