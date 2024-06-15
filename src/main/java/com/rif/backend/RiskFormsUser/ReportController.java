@@ -53,19 +53,19 @@ public class ReportController {
         return ResponseEntity.ok(reportDTOs);
     }
 
-    @GetMapping("/unitTypeCount/{unitType}")
-    public ResponseEntity<Long> getReportCountByUnitType(@PathVariable String unitType) {
-        long count = reportService.getReportCountByUnitType(unitType);
-        return ResponseEntity.ok(count);
-    }
+ @GetMapping("/unitTypeCount/{unitType}")
+public ResponseEntity<Long> getReportCountByUnitType(@PathVariable String unitType) {
+    long count = reportService.getReportCountByUnitType(unitType);
+    return ResponseEntity.ok(count);
+}
 
-    @GetMapping("/unitTypeCount/{unitType}/dateRange")
-    public ResponseEntity<Long> getReportCountByUnitTypeAndDateRange(@PathVariable String unitType,
-                                                                     @RequestParam String startDate,
-                                                                     @RequestParam String endDate) {
-        long count = reportService.getReportCountByUnitTypeAndDateRange(unitType, startDate, endDate);
-        return ResponseEntity.ok(count);
-    }
+@GetMapping("/unitTypeCount/{unitType}/dateRange")
+public ResponseEntity<Long> getReportCountByUnitTypeAndDateRange(@PathVariable String unitType,
+                                                                 @RequestParam String startDate,
+                                                                 @RequestParam String endDate) {
+    long count = reportService.getReportCountByUnitTypeAndDateRange(unitType, startDate, endDate);
+    return ResponseEntity.ok(count);
+}
 
     @GetMapping("/all-reports")
     public ResponseEntity<List<ReportDTO>> getAllReports() {

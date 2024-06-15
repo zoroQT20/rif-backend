@@ -81,15 +81,16 @@ public class ReportService {
         return reportRepository.findAllByUnitType(unitType);
     }
 
-    @Transactional(readOnly = true)
-    public long getReportCountByUnitType(String unitType) {
-        return reportRepository.countByUnitType(unitType);
-    }
+@Transactional(readOnly = true)
+public long getReportCountByUnitType(String unitType) {
+    return reportRepository.countByUnitType(unitType);
+}
 
-    @Transactional(readOnly = true)
-    public long getReportCountByUnitTypeAndDateRange(String unitType, String startDate, String endDate) {
-        return reportRepository.countByUnitTypeAndDateRange(unitType, startDate, endDate);
-    }
+@Transactional(readOnly = true)
+public long getReportCountByUnitTypeAndDateRange(String unitType, String startDate, String endDate) {
+    return reportRepository.countByUnitTypeAndDateRange(unitType, startDate, endDate);
+}
+
 
     @Transactional(readOnly = true)
     public List<Report> getReportsByUserUnitOrApproverUnit(String unit, String email) {

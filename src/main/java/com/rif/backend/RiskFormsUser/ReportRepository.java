@@ -21,11 +21,12 @@ Optional<Report> findByIdWithRiskForms(@Param("id") Long id);
     @Query("SELECT r FROM Report r JOIN r.user u JOIN u.prerequisite p WHERE p.unitType = :unitType")
     List<Report> findAllByUnitType(String unitType);
 
-    @Query("SELECT COUNT(r) FROM Report r JOIN r.user u JOIN u.prerequisite p WHERE p.unitType = :unitType")
-    long countByUnitType(String unitType);
+   @Query("SELECT COUNT(r) FROM Report r JOIN r.user u JOIN u.prerequisite p WHERE p.unitType = :unitType AND r.status = 'ADMIN_VERIFIED'")
+long countByUnitType(String unitType);
 
-    @Query("SELECT COUNT(r) FROM Report r JOIN r.user u JOIN u.prerequisite p WHERE p.unitType = :unitType AND r IN (SELECT rf.report FROM RiskFormData rf WHERE rf.submissionDate BETWEEN :startDate AND :endDate)")
-    long countByUnitTypeAndDateRange(@Param("unitType") String unitType, @Param("startDate") String startDate, @Param("endDate") String endDate);
+@Query("SELECT COUNT(r) FROM Report r JOIN r.user u JOIN u.prerequisite p WHERE p.unitType = :unitType AND r.status = 'ADMIN_VERIFIED' AND r IN (SELECT rf.report FROM RiskFormData rf WHERE rf.submissionDate BETWEEN :startDate AND :endDate)")
+long countByUnitTypeAndDateRange(@Param("unitType") String unitType, @Param("startDate") String startDate, @Param("endDate") String endDate);
+
 
       @Query("SELECT r FROM Report r JOIN r.user u JOIN u.prerequisite p WHERE p.unit = :unit OR p.unit = (SELECT a.approverUnit FROM Approver a WHERE a.user.email = :email)")
     List<Report> findAllByUserUnitOrApproverUnit(@Param("unit") String unit, @Param("email") String email);
