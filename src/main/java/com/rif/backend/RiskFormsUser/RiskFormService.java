@@ -80,10 +80,10 @@ public List<RiskFormDataCustomDTO> getRiskFormDataBySdaNumber(Integer sdaNumber)
 public List<PrerequisiteDataDTO> getAllRiskFormData() {
     List<Object[]> results = riskFormRepository.findAllRiskFormData();
     return results.stream()
+            .filter(result -> "ADMIN_VERIFIED".equals(result[6])) // Assuming the status is the 7th field in the result array
             .map(result -> new PrerequisiteDataDTO((String) result[0], (String) result[1], (Integer) result[2], (String) result[3], (String) result[4], (String) result[5]))
             .collect(Collectors.toList());
 }
-
 
 
     @Transactional(readOnly = true)

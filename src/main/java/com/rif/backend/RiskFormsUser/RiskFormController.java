@@ -82,7 +82,7 @@ public ResponseEntity<List<RiskFormDataCustomDTO>> getRiskFormDataBySdaNumber(@P
     return ResponseEntity.ok(data);
 }
 
- @GetMapping("/allData")
+@GetMapping("/allData")
 public ResponseEntity<List<PrerequisiteDataDTO>> getAllRiskFormData() {
     List<PrerequisiteDataDTO> data = riskFormService.getAllRiskFormData();
     return ResponseEntity.ok(data);

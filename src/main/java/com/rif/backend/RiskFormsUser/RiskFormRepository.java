@@ -32,11 +32,12 @@ List<Object[]> findGroupedBySdaNumber();
 List<Object[]> findRiskFormDataBySdaNumber(Integer sdaNumber);
 
 
-  @Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.sda_number as sdaNumber, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType " +
+@Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.sda_number as sdaNumber, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType, r.status as status " +
                "FROM risk_forms rf " +
                "JOIN reports r ON rf.report_id = r.id " +
                "JOIN user u ON r.user_id = u.id " +
-               "JOIN prerequisite p ON u.id = p.user_id", nativeQuery = true)
+               "JOIN prerequisite p ON u.id = p.user_id " +
+               "WHERE r.status = 'ADMIN_VERIFIED'", nativeQuery = true)
 List<Object[]> findAllRiskFormData();
 
   @Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType " +
