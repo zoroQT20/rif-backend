@@ -54,26 +54,26 @@ public ResponseEntity<?> getReportById(@PathVariable Long id) {
         return ResponseEntity.ok(reportDTOs);
     }
 
-  @GetMapping("/groupedBySdaNumber")
-    public ResponseEntity<List<RiskFormDataGroupedDTO>> getRiskFormDataGroupedBySdaNumber(
-        @RequestParam(required = false) String startDate,
-        @RequestParam(required = false) String endDate,
-        @RequestParam(required = false) Boolean sortUnitAsc
-    ) {
-        List<RiskFormDataGroupedDTO> groupedData = riskFormService.getRiskFormDataGroupedBySdaNumber();
+ @GetMapping("/groupedBySdaNumber")
+public ResponseEntity<List<RiskFormDataGroupedDTO>> getRiskFormDataGroupedBySdaNumber(
+    @RequestParam(required = false) String startDate,
+    @RequestParam(required = false) String endDate,
+    @RequestParam(required = false) Boolean sortUnitAsc
+) {
+    List<RiskFormDataGroupedDTO> groupedData = riskFormService.getRiskFormDataGroupedBySdaNumber();
 
-        if (startDate != null && endDate != null) {
-            groupedData = groupedData.stream()
-                .filter(data -> data.getSubmissionDate().compareTo(startDate) >= 0 && data.getSubmissionDate().compareTo(endDate) <= 0)
-                .collect(Collectors.toList());
-        }
-
-        if (sortUnitAsc != null) {
-            groupedData.sort((a, b) -> sortUnitAsc ? a.getUnit().compareTo(b.getUnit()) : b.getUnit().compareTo(a.getUnit()));
-        }
-
-        return ResponseEntity.ok(groupedData);
+    if (startDate != null && endDate != null) {
+        groupedData = groupedData.stream()
+            .filter(data -> data.getSubmissionDate().compareTo(startDate) >= 0 && data.getSubmissionDate().compareTo(endDate) <= 0)
+            .collect(Collectors.toList());
     }
+
+    if (sortUnitAsc != null) {
+        groupedData.sort((a, b) -> sortUnitAsc ? a.getUnit().compareTo(b.getUnit()) : b.getUnit().compareTo(a.getUnit()));
+    }
+
+    return ResponseEntity.ok(groupedData);
+}
 
 
   @GetMapping("/dataBySdaNumber/{sdaNumber}")

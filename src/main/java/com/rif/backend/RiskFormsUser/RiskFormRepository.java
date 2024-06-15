@@ -12,14 +12,16 @@ public interface RiskFormRepository extends JpaRepository<RiskFormData, Long> {
 
   
   @Query(value = "SELECT rf.sda_number as sdaNumber, rf.issue_particulars as issueParticulars, " +
-                   "GROUP_CONCAT(rp.description) as riskParticularDescriptions, p.unit as unit, rf.submission_date as submissionDate, rf.risk_rating as riskRating, rf.risk_level as riskLevel " +
-                   "FROM risk_forms rf " +
-                   "JOIN risk_particulars rp ON rf.id = rp.risk_form_data_id " +
-                   "JOIN reports r ON rf.report_id = r.id " +
-                   "JOIN user u ON r.user_id = u.id " +
-                   "JOIN prerequisite p ON u.id = p.user_id " +
-                   "GROUP BY rf.sda_number, rf.issue_particulars, p.unit, rf.submission_date, rf.risk_rating, rf.risk_level", nativeQuery = true)
-    List<Object[]> findGroupedBySdaNumber();
+               "GROUP_CONCAT(rp.description) as riskParticularDescriptions, p.unit as unit, rf.submission_date as submissionDate, rf.risk_rating as riskRating, rf.risk_level as riskLevel " +
+               "FROM risk_forms rf " +
+               "JOIN risk_particulars rp ON rf.id = rp.risk_form_data_id " +
+               "JOIN reports r ON rf.report_id = r.id " +
+               "JOIN user u ON r.user_id = u.id " +
+               "JOIN prerequisite p ON u.id = p.user_id " +
+               "WHERE r.status = 'ADMIN_VERIFIED' " +
+               "GROUP BY rf.sda_number, rf.issue_particulars, p.unit, rf.submission_date, rf.risk_rating, rf.risk_level", nativeQuery = true)
+List<Object[]> findGroupedBySdaNumber();
+
 
 @Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType " +
                "FROM risk_forms rf " +
