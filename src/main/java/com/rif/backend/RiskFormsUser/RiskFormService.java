@@ -68,7 +68,7 @@ public void saveRiskFormDataList(List<RiskFormData> formDataList) {
         )).collect(Collectors.toList());
     }
 
-  @Transactional(readOnly = true)
+@Transactional(readOnly = true)
 public List<RiskFormDataCustomDTO> getRiskFormDataBySdaNumber(Integer sdaNumber) {
     List<Object[]> results = riskFormRepository.findRiskFormDataBySdaNumber(sdaNumber);
     return results.stream()

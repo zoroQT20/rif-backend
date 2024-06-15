@@ -28,8 +28,9 @@ List<Object[]> findGroupedBySdaNumber();
                "JOIN reports r ON rf.report_id = r.id " +
                "JOIN user u ON r.user_id = u.id " +
                "JOIN prerequisite p ON u.id = p.user_id " +
-               "WHERE rf.sda_number = :sdaNumber", nativeQuery = true)
+               "WHERE rf.sda_number = :sdaNumber AND r.status = 'ADMIN_VERIFIED'", nativeQuery = true)
 List<Object[]> findRiskFormDataBySdaNumber(Integer sdaNumber);
+
 
   @Query(value = "SELECT p.unit as unit, p.unit_type as unitType, rf.sda_number as sdaNumber, rf.risk_level as riskLevel, rf.submission_date as submissionDate, rf.risk_type as riskType " +
                "FROM risk_forms rf " +

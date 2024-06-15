@@ -76,7 +76,7 @@ public ResponseEntity<List<RiskFormDataGroupedDTO>> getRiskFormDataGroupedBySdaN
 }
 
 
-  @GetMapping("/dataBySdaNumber/{sdaNumber}")
+@GetMapping("/dataBySdaNumber/{sdaNumber}")
 public ResponseEntity<List<RiskFormDataCustomDTO>> getRiskFormDataBySdaNumber(@PathVariable Integer sdaNumber) {
     List<RiskFormDataCustomDTO> data = riskFormService.getRiskFormDataBySdaNumber(sdaNumber);
     return ResponseEntity.ok(data);
